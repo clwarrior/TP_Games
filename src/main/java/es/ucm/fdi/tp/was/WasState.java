@@ -1,5 +1,6 @@
-package es.ucm.fdi.tp.ttt;
+package es.ucm.fdi.tp.was;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,65 +11,70 @@ import es.ucm.fdi.tp.base.model.GameState;
  * Describes a board of TickTackToe that is either being
  * played or is already finished.
  */
-public class TttState extends GameState<TttState, TttAction> {
+public class WasState extends GameState<WasState, WasAction> {
 
-	private static final long serialVersionUID = -2641387354190472377L;
+	private static final long serialVersionUID = -6066312347935012935L;
 	
 	private final int turn;
     private final boolean finished;
-    private final int[][] board;
     private final int winner;
+    private final Point[] pieces;
 
-    private final int dim;
-
+    private final int dim = 8;
+    private final int[][] moves = new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+    
     final static int EMPTY = -1;
 
-    public TttState(int dim) {    	
+    public WasState() {    	
         super(2);
-        if (dim < 3 || dim > 4) {
-            throw new IllegalArgumentException("Expected dim to be 3 or 4");
-        }
 
-        this.dim = dim;
-        board = new int[dim][];
-        for (int i=0; i<dim; i++) {
-            board[i] = new int[dim];
-            for (int j=0; j<dim; j++) board[i][j] = EMPTY;
+        this.pieces[0] = new Point();
+        board[this.pieces[0][0]][this.pieces[0][1]] = 0;
+        for(int i = 1; i < board.length; i += 2){
+        	board[0][i] = 1;
         }
         this.turn = 0;
         this.winner = -1;
         this.finished = false;
     }
         
-    public TttState(TttState prev, int[][] board, boolean finished, int winner) {
+    public WasState(WasState prev, int[][] board, boolean finished, int winner) {
     	super(2);
-    	this.dim = prev.dim;
         this.board = board;
         this.turn = (prev.turn + 1) % 2;
         this.finished = finished;
         this.winner = winner;
     }    
 
-    public boolean isValid(TttAction action) {
+    public boolean isValid(WasAction action) {
         if (isFinished()) {
             return false;
         }
         return at(action.getRow(), action.getCol()) == EMPTY;
     }
 
-    public List<TttAction> validActions(int playerNumber) {
-        ArrayList<TttAction> valid = new ArrayList<>();
+    public List<WasAction> validActions(int playerNumber) {
+        ArrayList<WasAction> valid = new ArrayList<>();
+        int cont;
         if (finished) {
             return valid;
         }
 
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                if (at(i, j) == EMPTY) {
-                    valid.add(new TttAction(playerNumber, i, j));
-                }
-            }
+        if (playerNumber == 0){
+        	cont=4;
         }
+        else{
+        	cont=2;
+        }
+        int[] wNewPos = new int[2];
+    	for(int i = 0; i < cont;++i){
+    		wNewPos[0] = wpos[0] + moves[i][0];
+    		wNewPos[1] = wpos[1] + moves[i][1];
+    		WasAction action;
+    		if (isValid(action)){
+    		//añadir
+    		}
+    	}
     
         return valid;
     }
