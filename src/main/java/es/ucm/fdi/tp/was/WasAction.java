@@ -10,13 +10,16 @@ public class WasAction implements GameAction<WasState, WasAction> {
 	private static final long serialVersionUID = -8491198872908329925L;
 	
 	private int player;
-    private int row;
-    private int col;
+    private WasState.Coord iniPos;
+    private WasState.Coord endPos;
 
-    public WasAction(int player, int row, int col) {
+    
+    public WasAction(int player, int row, int col, WasState.Coord ini) {
         this.player = player;
         this.row = row;
         this.col = col;
+        this.iniPos = ini;
+        
     }
 
     public int getPlayerNumber() {

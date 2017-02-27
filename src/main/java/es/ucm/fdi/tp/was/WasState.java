@@ -1,6 +1,5 @@
 package es.ucm.fdi.tp.was;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,85 +12,98 @@ import es.ucm.fdi.tp.base.model.GameState;
  */
 public class WasState extends GameState<WasState, WasAction> {
 
+	static class Coord {
+		int row;
+		int col;
+		public Coord(int row, int col) { this.row = row; this.col = col; }
+		public Coord add(Coord o) {
+			return new Coord(this.row + o.row, this.col + o.col);
+		}
+	}
+	
 	private static final long serialVersionUID = -6066312347935012935L;
 	
 	private final int turn;
     private final boolean finished;
     private final int winner;
-    private final Point[] pieces;
-
-    private final int dim = 8;
-    private final int[][] moves = new int[][]{{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+    private final Coord[] pieces;
+    private final int dim = 8;    
+    
+    /**
+     * initial positions for wolf (1st) and sheep (rest)
+     */
+    private final Coord[] initialPositions = {
+    		new Coord(dim-1, 0), 
+    		new Coord(0, 1), new Coord(0, 3), 
+    		new Coord(0, 5), new Coord(0, 7)
+    };  
+    
+    private final Coord[] moves = {
+    		new Coord(-1, -1), new Coord(-1, 1), 
+    		new Coord(1, -1), new Coord(1, 1)
+    };
     
     final static int EMPTY = -1;
 
     public WasState() {    	
         super(2);
-
-        this.pieces[0] = new Point();
-        board[this.pieces[0][0]][this.pieces[0][1]] = 0;
-        for(int i = 1; i < board.length; i += 2){
-        	board[0][i] = 1;
-        }
+        this.pieces = initialPositions.clone();
         this.turn = 0;
         this.winner = -1;
         this.finished = false;
     }
         
-    public WasState(WasState prev, int[][] board, boolean finished, int winner) {
+    public WasState(WasState prev, Coord[] pieces, boolean finished, int winner) {
     	super(2);
-        this.board = board;
+        this.pieces=pieces;
         this.turn = (prev.turn + 1) % 2;
         this.finished = finished;
         this.winner = winner;
     }    
 
     public boolean isValid(WasAction action) {
+    	boolean valid=false;
         if (isFinished()) {
             return false;
         }
-        return at(action.getRow(), action.getCol()) == EMPTY;
+        if (action.getRow()>=0 &&action.getCol()>=0 && action.getRow()<dim && action.getCol()<dim){
+        	valid = at(action.getRow(), action.getCol()) == EMPTY;
+        }
+        return  valid;
     }
 
     public List<WasAction> validActions(int playerNumber) {
         ArrayList<WasAction> valid = new ArrayList<>();
-        int cont;
         if (finished) {
             return valid;
         }
-
+        Coord newPos;
         if (playerNumber == 0){
-        	cont=4;
+        	for(int i = 0; i < 4;++i){
+        		newPos = pieces[0].add(this.moves[i]);
+        		WasAction action = new WasAction(playerNumber, newPos.row, newPos.col, pieces[0]);
+        		if (isValid(action)){
+        			valid.add(action);
+        		}
+        	}
         }
         else{
-        	cont=2;
+        	for(int sheep=1;sheep<5;++sheep){
+        		for(int i = 0; i < 2;++i){
+        			newPos = pieces[sheep].add(this.moves[i]);
+        			WasAction action = new WasAction(playerNumber, newPos.row, newPos.col, pieces[sheep]);
+        			if (isValid(action)){
+        				valid.add(action);
+        			}
+        		}
+        	}
         }
-        int[] wNewPos = new int[2];
-    	for(int i = 0; i < cont;++i){
-    		wNewPos[0] = wpos[0] + moves[i][0];
-    		wNewPos[1] = wpos[1] + moves[i][1];
-    		WasAction action;
-    		if (isValid(action)){
-    		//añadir
-    		}
-    	}
-    
         return valid;
     }
 
-    public static boolean isDraw(int[][] board) {
-        boolean empty = false;
-        for (int i=0; ! empty && i<board.length; i++) {
-            for (int j=0; ! empty && j<board.length; j++) {
-                if (board[i][j] == EMPTY) {
-                    empty = true;
-                }
-            }
-        }
-        return ! empty;
-    }
 
-    private static boolean isWinner(int[][] board, int playerNumber, 
+
+    private static boolean isWinner(Coord[] pieces, int playerNumber, 
     		int x0, int y0, int dx, int dy) {
         boolean won = true;
         for (int i=0, x=x0, y=y0; won && i<board.length; i++, x+=dx, y+=dy) {
@@ -100,9 +112,19 @@ public class WasState extends GameState<WasState, WasAction> {
         return won;
     }
 
-
-    public static boolean isWinner(int[][] board, int playerNumber) {
+    // Lo ponemos no estático o creamos un nuevo objeto WasState para llamar validActions sobre el o creamos otro validActions
+    // dado playerNumber y pieces
+    
+    public static boolean isWinner(Coord[] pieces, int playerNumber) {
         boolean won = false;
+        if(playerNumber==0 && pieces[0].row==0)
+        	won=true;
+        else{
+        	List<WasState> validAux = validActions(0);
+        	
+        }
+        
+        
         for (int i=0; !won && i<board.length; i++) {
             if (isWinner(board, playerNumber, 0, i, 1, 0)) won = true;
             if (isWinner(board, playerNumber, i, 0, 0, 1)) won = true;
@@ -113,7 +135,16 @@ public class WasState extends GameState<WasState, WasAction> {
     }    
 
     public int at(int row, int col) {
-        return board[row][col];
+    	int sol=-1;
+    	for(int i=0;i<this.pieces.length; ++i){
+    		if(row==pieces[i].row && col==pieces[i].col){
+    			if (i==0)
+    				sol=i;
+    			else
+    				sol=1;
+    		}		
+    	}
+        return sol;
     }
 
     public int getTurn() {
@@ -128,21 +159,12 @@ public class WasState extends GameState<WasState, WasAction> {
         return winner;
     }
 
-    /**
-     * @return a copy of the board
-     */
-    public int[][] getBoard() {
-        int[][] copy = new int[board.length][];
-        for (int i=0; i<board.length; i++) copy[i] = board[i].clone();
-        return copy;
-    }
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i=0; i<board.length; i++) {
+        for (int i=0; i<dim; i++) {
             sb.append("|");
-            for (int j=0; j<board.length; j++) {
-                sb.append(board[i][j] == EMPTY ? "   |" : board[i][j] == 0 ? " O |" : " X |");
+            for (int j=0; j<dim; j++) {
+                sb.append(at(i, j) == EMPTY ? "   |" : at(i, j) == 0 ? " O |" : " X |");
             }
             sb.append("\n");
         }
