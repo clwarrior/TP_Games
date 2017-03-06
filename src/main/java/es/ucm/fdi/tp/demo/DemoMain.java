@@ -16,7 +16,7 @@ import java.util.Scanner;
  * Demo main, used to test game functionality. You can use it as an inspiration,
  * but we expect you to build your own main-class.
  */
-public class Main {
+public class DemoMain {
 
 	public static <S extends GameState<S, A>, A extends GameAction<S, A>> int playGame(GameState<S, A> initialState,
 			List<GamePlayer> players) {
@@ -100,7 +100,7 @@ public class Main {
 	 * 
 	 * @param args
 	 */
-	public static void main(String... args) {
+	public static void demoMain(String... args) {
 		// testTtt();
 		match(new TttState(3), new SmartPlayer("AiAlice", 5), new RandomPlayer("AiBob"), 100);
 	}

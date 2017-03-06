@@ -6,10 +6,15 @@ import es.ucm.fdi.tp.base.model.GamePlayer;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
+import es.ucm.fdi.tp.exceptions.ParameterException;
 import es.ucm.fdi.tp.ttt.TttState;
+import es.ucm.fdi.tp.was.WasState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -18,6 +23,15 @@ import java.util.Scanner;
  */
 public class Main {
 
+	private static String[] gente = new String[] {"Ana", "Berto", "Carlos", "Daniela", "Evaristo", "Fátima"};
+	
+	private static List< String > nombresNoRepes(int n){
+		ArrayList< String > elegidos = new ArrayList<>(Arrays.asList(gente));
+		Collections.shuffle(elegidos);
+		while(elegidos.size() > n) elegidos.remove(elegidos.size() - 1);
+		return elegidos;
+	}
+	
 	public static <S extends GameState<S, A>, A extends GameAction<S, A>> int playGame(GameState<S, A> initialState,
 			List<GamePlayer> players) {
 		int playerCount = 0;
@@ -100,17 +114,39 @@ public class Main {
 	 * 
 	 * @param args
 	 */
-	public static void main(String... args) { //----------- Solo muestra de como hacerlo
+	public static void main(String... args) {
 		try (Scanner s = new Scanner(System.in)) {
 			List<GamePlayer> players = new ArrayList<GamePlayer>();
-			GameState<?, ?> game = new TttState(3);
-			if (args[1].startsWith("console")) {
-				players.add(new ConsolePlayer("Alice", s));
-			} else {
-				players.add(new RandomPlayer("RandomAlice"));
+			GameState< ?, ? > game;
+			
+			int numJugadores = 0;
+			if (args[0].startsWith("ttt")){
+				game = new TttState(3);
+				numJugadores = 2;
+			} else if (args[0].startsWith("was")){
+				game = new WasState();
+				numJugadores = 2;
+			} else
+				throw new ParameterException("juego no válido");
+			
+			List<String> names = nombresNoRepes(numJugadores);
+			if(args.length - 1 != numJugadores)
+				throw new ParameterException("numero de jugadores incompatible");
+			
+			for(int i = 0; i < numJugadores; ++i){
+				if (args[i + 1].startsWith("console")) {
+					players.add(new ConsolePlayer(names.get(i), s));
+				} else if (args[i + 1].startsWith("rand")){
+					players.add(new RandomPlayer("Random" + names.get(i)));
+				} else if (args[i + 1].startsWith("smart")){
+					players.add(new SmartPlayer("AI" + names.get(i), 5));
+				} else {
+					throw new ParameterException("jugador \"" + args[i + 1] + "\" no definido");
+				}
 			}
-			players.add(new SmartPlayer("AiBob", 5));
 			playGame(game, players);
+		} catch (ParameterException e) {
+			System.err.println(e);
 		}
 	}
 }

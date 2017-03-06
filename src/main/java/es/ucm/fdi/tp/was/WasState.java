@@ -19,6 +19,7 @@ public class WasState extends GameState<WasState, WasAction> {
 		public Coord add(Coord o) {
 			return new Coord(this.row + o.row, this.col + o.col);
 		}
+		public boolean isAt(int row, int col) { return this.row == row && this.col == col; }		
 	}
 	
 	private static final long serialVersionUID = -6066312347935012935L;
@@ -28,7 +29,7 @@ public class WasState extends GameState<WasState, WasAction> {
     private final int winner;
     private final Coord[] pieces;
     private final int dim = 8;    
-    
+       
     /**
      * initial positions for wolf (1st) and sheep (rest)
      */
@@ -43,8 +44,12 @@ public class WasState extends GameState<WasState, WasAction> {
     		new Coord(1, -1), new Coord(1, 1)
     };
     
-    final static int EMPTY = -1;
-
+    public final int WOLF = 0; 
+    public final int SHEEP = 1; 
+    public final int EMPTY = -1; 
+    public final int OUTSIDE = -2; 
+    
+    
     public WasState() {    	
         super(2);
         this.pieces = initialPositions.clone();
@@ -73,15 +78,15 @@ public class WasState extends GameState<WasState, WasAction> {
     }
 
     public List<WasAction> validActions(int playerNumber) {
-        ArrayList<WasAction> valid = new ArrayList<>();
-        if (finished) {
+    	List<WasAction> valid = new ArrayList<>();
+    	if (finished) {
             return valid;
         }
         Coord newPos;
-        if (playerNumber == 0){
+        if (playerNumber == WOLF){
         	for(int i = 0; i < 4;++i){
         		newPos = pieces[0].add(this.moves[i]);
-        		WasAction action = new WasAction(playerNumber, newPos.row, newPos.col, pieces[0]);
+        		WasAction action = new WasAction(playerNumber, newPos, pieces[0]);
         		if (isValid(action)){
         			valid.add(action);
         		}
@@ -91,7 +96,7 @@ public class WasState extends GameState<WasState, WasAction> {
         	for(int sheep=1;sheep<5;++sheep){
         		for(int i = 0; i < 2;++i){
         			newPos = pieces[sheep].add(this.moves[i]);
-        			WasAction action = new WasAction(playerNumber, newPos.row, newPos.col, pieces[sheep]);
+        			WasAction action = new WasAction(playerNumber, newPos, pieces[sheep]);
         			if (isValid(action)){
         				valid.add(action);
         			}
@@ -99,56 +104,41 @@ public class WasState extends GameState<WasState, WasAction> {
         	}
         }
         return valid;
-    }
+	}
 
 
-
-    private static boolean isWinner(Coord[] pieces, int playerNumber, 
-    		int x0, int y0, int dx, int dy) {
-        boolean won = true;
-        for (int i=0, x=x0, y=y0; won && i<board.length; i++, x+=dx, y+=dy) {
-            if (board[y][x] != playerNumber) won = false;
-        }
-        return won;
-    }
-
-    // Lo ponemos no estático o creamos un nuevo objeto WasState para llamar validActions sobre el o creamos otro validActions
+    // Lo ponemos no estático o creamos un nuevo objeto WasState para llamar 
+    // validActions sobre el o creamos otro validActions
     // dado playerNumber y pieces
     
-    public static boolean isWinner(Coord[] pieces, int playerNumber) {
-        boolean won = false;
-        if(playerNumber==0 && pieces[0].row==0)
-        	won=true;
-        else{
-        	List<WasState> validAux = validActions(0);
-        	
-        }
-        
-        
-        for (int i=0; !won && i<board.length; i++) {
-            if (isWinner(board, playerNumber, 0, i, 1, 0)) won = true;
-            if (isWinner(board, playerNumber, i, 0, 0, 1)) won = true;
-        }
-        return won ||
-                isWinner(board, playerNumber, 0, 0, 1, 1) ||
-                isWinner(board, playerNumber, 2, 0, -1, 1);
+    public boolean isWinner(int playerNumber) {
+        if(playerNumber==WOLF) {
+        	return pieces[0].row==0;
+        } else {
+        	return !validActions(WOLF).isEmpty();        	
+        }   
     }    
+    
+    public boolean sheepBlocked(){
+    	return !validActions(SHEEP).isEmpty();
+    }
 
     public int at(int row, int col) {
-    	int sol=-1;
-    	for(int i=0;i<this.pieces.length; ++i){
-    		if(row==pieces[i].row && col==pieces[i].col){
-    			if (i==0)
-    				sol=i;
-    			else
-    				sol=1;
-    		}		
+    	if (row < 0 || col < 0 || row >= dim || col >= dim) return OUTSIDE;
+    	int i=0;
+    	for (Coord c : pieces) {
+    		if (c.isAt(row, col)) return i;
+    		i=1;
     	}
-        return sol;
+        return EMPTY;
     }
 
     public int getTurn() {
         return turn;
+    }
+    
+    public Coord[] getPieces() {
+    	return this.pieces;
     }
 
     public boolean isFinished() {
