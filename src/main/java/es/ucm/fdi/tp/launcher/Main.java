@@ -114,7 +114,7 @@ public class Main {
 	 * 
 	 * @param args
 	 */
-	public static void main(String... args) {
+	public static void main(String... args) {				
 		try (Scanner s = new Scanner(System.in)) {
 			List<GamePlayer> players = new ArrayList<GamePlayer>();
 			GameState< ?, ? > game;
