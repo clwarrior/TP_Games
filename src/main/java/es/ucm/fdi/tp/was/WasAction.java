@@ -2,9 +2,7 @@ package es.ucm.fdi.tp.was;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 
-/**
- * An action for TickTackToe.
- */
+
 public class WasAction implements GameAction<WasState, WasAction> {
 
 	private static final long serialVersionUID = -8491198872908329925L;
@@ -16,8 +14,8 @@ public class WasAction implements GameAction<WasState, WasAction> {
     
     public WasAction(int player, WasState.Coord fin, WasState.Coord ini) {
         this.player = player;
-        this.endPos=fin;
-        this.iniPos = ini;
+        this.endPos = fin.clone();
+        this.iniPos = ini.clone();
         
     }
 
@@ -32,17 +30,18 @@ public class WasAction implements GameAction<WasState, WasAction> {
 
         // make move
         WasState.Coord[] pieces = state.getPieces();
-        for(WasState.Coord c : pieces){
-        	if(c.isAt(iniPos.row, iniPos.col))
-        		c = endPos;
+        for(int i = 0; i < pieces.length; ++i){
+        	if(pieces[i].isAt(iniPos.row, iniPos.col))
+        		pieces[i] = endPos;
         }
 
         // update state
-        WasState next = new WasState(state, pieces, state.isFinished(), state.getTurn());
-        if (next.isWinner(state.getTurn())) {
+        WasState next = new WasState(state, pieces, state.isFinished(), -1);
+        if (next.isWinner((state.getTurn()))) {
         	next = new WasState(state, pieces, true, state.getTurn());
-        } else if (state.getTurn() == state.WOLF && next.sheepBlocked()){
-        	next = new WasState(state, pieces, false, state.getTurn() - 1);
+        } else if (next.getTurn() == next.SHEEP && next.sheepBlocked()){
+        	state = new WasState(state, pieces, false, -1);
+        	next = new WasState(state, pieces, false, -1);
         } else {
             next = new WasState(state, pieces, false, -1);
         }
@@ -58,7 +57,13 @@ public class WasAction implements GameAction<WasState, WasAction> {
     }
 
     public String toString() {
-        return "place " + player + " at (" + endPos.row + ", " + endPos.col + ")";
+        String show = "Move ";
+        if(player == 0)
+        	show = show + "wolf";
+        else
+        	show = show + "sheep";
+        show = show + " from " + iniPos + " to " + endPos;
+        return show;
     }
 
 }

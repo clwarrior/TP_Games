@@ -14,13 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
-/**
- * Demo main, used to test game functionality. You can use it as an inspiration,
- * but we expect you to build your own main-class.
- */
 public class Main {
 
 	private static String[] gente = new String[] {"Ana", "Berto", "Carlos", "Daniela", "Evaristo", "Fátima"};
@@ -35,18 +30,26 @@ public class Main {
 	public static <S extends GameState<S, A>, A extends GameAction<S, A>> int playGame(GameState<S, A> initialState,
 			List<GamePlayer> players) {
 		int playerCount = 0;
+		System.out.println();
+		System.out.println("New game started: ");
 		for (GamePlayer p : players) {
-			p.join(playerCount++); // welcome each player, and assign
-									// playerNumber
+			System.out.println("Welcome, " + p.getName() + "!!!");
+			System.out.println("You are player number " + playerCount + "\n");
+			p.join(playerCount++); // welcome each player, and assign playerNumber
 		}
 		@SuppressWarnings("unchecked")
 		S currentState = (S) initialState;
 
+		System.out.println(currentState);
+		
 		while (!currentState.isFinished()) {
 			// request move
+			System.out.println("It's " + players.get(currentState.getTurn()).getName()
+					+ "'s turn");
 			A action = players.get(currentState.getTurn()).requestAction(currentState);
 			// apply move
 			currentState = action.applyTo(currentState);
+			
 			System.out.println("After action:\n" + currentState);
 
 			if (currentState.isFinished()) {
@@ -96,20 +99,6 @@ public class Main {
 	}
 
 	/**
-	 * Plays tick-tack-toe with a console player against a smart player. The
-	 * smart player should never lose.
-	 */
-	public static void testTtt() {
-		try (Scanner s = new Scanner(System.in)) {
-			List<GamePlayer> players = new ArrayList<GamePlayer>();
-			GameState<?, ?> game = new TttState(3);
-			players.add(new ConsolePlayer("Alice", s));
-			players.add(new SmartPlayer("AiBob", 5));
-			playGame(game, players);
-		} // <-- closes the scanner when the try-block ends
-	}
-
-	/**
 	 * Main method.
 	 * 
 	 * @param args
@@ -127,24 +116,32 @@ public class Main {
 				game = new WasState();
 				numJugadores = 2;
 			} else
-				throw new ParameterException("juego no válido");
+				throw new ParameterException("game not available");
 			
 			List<String> names = nombresNoRepes(numJugadores);
 			if(args.length - 1 != numJugadores)
-				throw new ParameterException("numero de jugadores incompatible");
+				throw new ParameterException("number of players not suitable");
 			
 			for(int i = 0; i < numJugadores; ++i){
 				if (args[i + 1].startsWith("console")) {
-					players.add(new ConsolePlayer(names.get(i), s));
+					players.add(new ConsolePlayer(ConsolePlayer.askName(s), s));
 				} else if (args[i + 1].startsWith("rand")){
 					players.add(new RandomPlayer("Random" + names.get(i)));
 				} else if (args[i + 1].startsWith("smart")){
-					players.add(new SmartPlayer("AI" + names.get(i), 5));
+					players.add(new SmartPlayer("AI" + names.get(i), 15));
 				} else {
-					throw new ParameterException("jugador \"" + args[i + 1] + "\" no definido");
+					throw new ParameterException("player \"" + args[i + 1] + "\" not defined");
 				}
 			}
-			playGame(game, players);
+			
+			System.out.print("How many times do you want to play? ");
+			int num = s.nextInt();
+			if(num <= 0) {
+				throw new ParameterException("number of matches not suitable");
+			}
+			else
+				match(game, players.get(0), players.get(1), num);
+			
 		} catch (ParameterException e) {
 			System.err.println(e);
 		}

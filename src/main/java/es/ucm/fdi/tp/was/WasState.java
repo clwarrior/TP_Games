@@ -5,11 +5,6 @@ import java.util.List;
 
 import es.ucm.fdi.tp.base.model.GameState;
 
-/**
- * A TickTackToe state.
- * Describes a board of TickTackToe that is either being
- * played or is already finished.
- */
 public class WasState extends GameState<WasState, WasAction> {
 
 	static class Coord {
@@ -19,7 +14,13 @@ public class WasState extends GameState<WasState, WasAction> {
 		public Coord add(Coord o) {
 			return new Coord(this.row + o.row, this.col + o.col);
 		}
-		public boolean isAt(int row, int col) { return this.row == row && this.col == col; }		
+		public boolean isAt(int row, int col) { return this.row == row && this.col == col; }
+		public String toString() {
+			return "(" + row + ", " + col + ")";
+		}
+		public Coord clone() {
+			return new Coord(row, col);
+		}
 	}
 	
 	private static final long serialVersionUID = -6066312347935012935L;
@@ -40,8 +41,8 @@ public class WasState extends GameState<WasState, WasAction> {
     };  
     
     private final Coord[] moves = {
-    		new Coord(-1, -1), new Coord(-1, 1), 
-    		new Coord(1, -1), new Coord(1, 1)
+    		new Coord(1, -1), new Coord(1, 1), 
+    		new Coord(-1, -1), new Coord(-1, 1)
     };
     
     public final int WOLF = 0; 
@@ -60,7 +61,7 @@ public class WasState extends GameState<WasState, WasAction> {
         
     public WasState(WasState prev, Coord[] pieces, boolean finished, int winner) {
     	super(2);
-        this.pieces=pieces;
+        this.pieces=pieces.clone();
         this.turn = (prev.turn + 1) % 2;
         this.finished = finished;
         this.winner = winner;
@@ -74,6 +75,7 @@ public class WasState extends GameState<WasState, WasAction> {
         if (action.getRow()>=0 &&action.getCol()>=0 && action.getRow()<dim && action.getCol()<dim){
         	valid = at(action.getRow(), action.getCol()) == EMPTY;
         }
+
         return  valid;
     }
 
@@ -106,21 +108,16 @@ public class WasState extends GameState<WasState, WasAction> {
         return valid;
 	}
 
-
-    // Lo ponemos no estático o creamos un nuevo objeto WasState para llamar 
-    // validActions sobre el o creamos otro validActions
-    // dado playerNumber y pieces
-    
     public boolean isWinner(int playerNumber) {
         if(playerNumber==WOLF) {
         	return pieces[0].row==0;
         } else {
-        	return !validActions(WOLF).isEmpty();        	
+        	return validActions(WOLF).isEmpty();        	
         }   
     }    
     
     public boolean sheepBlocked(){
-    	return !validActions(SHEEP).isEmpty();
+    	return validActions(SHEEP).isEmpty();
     }
 
     public int at(int row, int col) {
@@ -138,7 +135,7 @@ public class WasState extends GameState<WasState, WasAction> {
     }
     
     public Coord[] getPieces() {
-    	return this.pieces;
+    	return this.pieces.clone();
     }
 
     public boolean isFinished() {
@@ -151,10 +148,27 @@ public class WasState extends GameState<WasState, WasAction> {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        
+        sb.append("\n  ");
+        for (int j=0; j<dim; j++) {
+            sb.append("  " + j + " ");
+        }
+        sb.append("\n");
+        sb.append("  ");
+        for (int j = 0; j < dim; ++j) {
+        	sb.append(" ---");
+        }
+        sb.append("\n");
+        
         for (int i=0; i<dim; i++) {
-            sb.append("|");
+            sb.append(i + " |");
             for (int j=0; j<dim; j++) {
-                sb.append(at(i, j) == EMPTY ? "   |" : at(i, j) == 0 ? " O |" : " X |");
+                sb.append(at(i, j) == EMPTY ? "   |" : at(i, j) == 0 ? " W |" : " S |");
+            }
+            sb.append("\n");
+            sb.append("  ");
+            for (int j = 0; j < dim; ++j) {
+            	sb.append(" ---");
             }
             sb.append("\n");
         }

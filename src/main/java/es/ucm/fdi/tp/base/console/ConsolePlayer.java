@@ -49,7 +49,7 @@ public class ConsolePlayer implements GamePlayer {
     	// displays a menu with all available actions + exit
     	System.out.println(
                 "Available actions: \n" +
-                "\t0 - exit game");		
+                "\t0 - Exit game");		
         int i = 0;
 		for (GameAction<?,?> a : actions) {
 			System.out.println("\t" + (++i) + " - " + a);
@@ -78,5 +78,12 @@ public class ConsolePlayer implements GamePlayer {
             }
         }
         return action;
+	}
+	
+	public static String askName(Scanner s) {
+		String name;
+		System.out.print("Type your name: ");
+		name = s.nextLine();
+		return name;
 	}
 }
