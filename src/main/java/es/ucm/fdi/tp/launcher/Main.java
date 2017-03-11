@@ -16,17 +16,40 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+
+/**
+ * Class main of the application. It's the launcher of the game.
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 1 (13/03/2017)
+ */
 public class Main {
 
-	private static String[] gente = new String[] {"Ana", "Berto", "Carlos", "Daniela", "Evaristo", "Fátima"};
+	/**
+	 * Array with names to be chosen for the not automatic players.
+	 */
+	private static String[] people = new String[] {"Ana", "Berto", "Carlos", 
+			"Daniela", "Evaristo", "Fátima", "Gloria", "Hilario", "Isabel", "Juan",
+			"Katia", "Luis", "María", "Norberto", "Olga", "Pedro", "Raúl", "Sara",
+			"Teresa", "Úrsula", "Víctor", "William"};
 	
-	private static List< String > nombresNoRepes(int n){
-		ArrayList< String > elegidos = new ArrayList<>(Arrays.asList(gente));
+	/**
+	 * Method that returns an array of size n full with different names from the array "people".
+	 * @param n Size of the array returned
+	 * @return List< String > which contains n different names from the array "people"
+	 */
+	private static List< String > notRepNames(int n){
+		ArrayList< String > elegidos = new ArrayList<>(Arrays.asList(people));
 		Collections.shuffle(elegidos);
 		while(elegidos.size() > n) elegidos.remove(elegidos.size() - 1);
 		return elegidos;
 	}
 	
+	/**
+	 * Method that guides one game and returns its result.
+	 * @param initialState Initial state of the game
+	 * @param players List of players which are going to play
+	 * @return int with the number of the winner
+	 */
 	public static <S extends GameState<S, A>, A extends GameAction<S, A>> int playGame(GameState<S, A> initialState,
 			List<GamePlayer> players) {
 		int playerCount = 0;
@@ -68,7 +91,7 @@ public class Main {
 	}
 
 	/**
-	 * Repeatedly plays a game-state with a vs b
+	 * Repeatedly plays a game with a vs b
 	 * 
 	 * @param initialState
 	 * @param a
@@ -118,7 +141,7 @@ public class Main {
 			} else
 				throw new ParameterException("game not available");
 			
-			List<String> names = nombresNoRepes(numJugadores);
+			List<String> names = notRepNames(numJugadores);
 			if(args.length - 1 != numJugadores)
 				throw new ParameterException("number of players not suitable");
 			
@@ -128,7 +151,7 @@ public class Main {
 				} else if (args[i + 1].startsWith("rand")){
 					players.add(new RandomPlayer("Random" + names.get(i)));
 				} else if (args[i + 1].startsWith("smart")){
-					players.add(new SmartPlayer("AI" + names.get(i), 15));
+					players.add(new SmartPlayer("AI" + names.get(i), 20));
 				} else {
 					throw new ParameterException("player \"" + args[i + 1] + "\" not defined");
 				}

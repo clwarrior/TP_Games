@@ -2,7 +2,11 @@ package es.ucm.fdi.tp.was;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 
-
+/**
+ * An action for Wolf and Sheeps.
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 1 (13/03/2017)
+ */
 public class WasAction implements GameAction<WasState, WasAction> {
 
 	private static final long serialVersionUID = -8491198872908329925L;
@@ -23,6 +27,11 @@ public class WasAction implements GameAction<WasState, WasAction> {
         return player;
     }
 
+    /**
+     * Method which applies the action to the game state given
+     * @param state It contains the current game state
+     * @return WasState which contains the new game state after applying the action
+     */
     public WasState applyTo(WasState state) {
         if (player != state.getTurn()) {
             throw new IllegalArgumentException("Not the turn of this player");
