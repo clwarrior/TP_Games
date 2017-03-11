@@ -6,6 +6,10 @@ import org.junit.Test;
 
 public class WasActionTest {
 	
+	/**
+	 * Test checking whether given a game state in which the sheeps are blocked, the program 
+	 * recognizes it properly
+	 */
 	@Test
 	public void testBlockedSheep() {
 		// Previo empieza con turno lobo

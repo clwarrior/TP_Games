@@ -5,6 +5,10 @@ import org.junit.Test;
 
 public class WasStateTest {
 
+	/**
+	 * Test checking whether given a game state in which the sheeps have won, the program 
+	 * recognizes it properly
+	 */
 	@Test
 	public void testSheepsWin() {
 		WasState previo = new WasState();
@@ -29,6 +33,10 @@ public class WasStateTest {
         assertEquals("Wolf blocked in center", true, prueba.isWinner(1));
     } 
 	
+	/**
+	 * Test checking whether given a game state in which the wolf has won, the program 
+	 * recognizes it properly
+	 */
 	@Test
 	public void testWolfWins() {
 		WasState previo = new WasState();
@@ -43,6 +51,9 @@ public class WasStateTest {
 		}
 	}
 	
+	/**
+	 * Test checking that the two first wolf movements generated are the correct ones
+	 */
 	@Test
 	public void testWolfMoves() {
 		WasState prueba = new WasState();
@@ -58,6 +69,9 @@ public class WasStateTest {
 		
 	}
 
+	/**
+	 * Test checking that the two first sheep movements generated are the correct ones
+	 */
 	@Test
 	public void testSheepsMoves() {
 		WasState prueba = new WasState();

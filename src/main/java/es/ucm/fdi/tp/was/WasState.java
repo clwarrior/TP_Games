@@ -5,8 +5,17 @@ import java.util.List;
 
 import es.ucm.fdi.tp.base.model.GameState;
 
+/**
+ * A state for the game "Wolf and Sheeps" storing all the relevant information needed to keep playing.
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 1 (13/03/2017)
+ */
+
 public class WasState extends GameState<WasState, WasAction> {
 
+	/**
+	 * Class representing a coordinate on the game board
+	 */
 	static class Coord {
 		int row;
 		int col;
@@ -40,6 +49,10 @@ public class WasState extends GameState<WasState, WasAction> {
     		new Coord(0, 5), new Coord(0, 7)
     };  
     
+    /**
+     * Different coordinates representing how can a player move on the board.
+     * A sheep can move as the two first ones and the wolf as the four of them.
+     */
     private final Coord[] moves = {
     		new Coord(1, -1), new Coord(1, 1), 
     		new Coord(-1, -1), new Coord(-1, 1)
@@ -67,6 +80,11 @@ public class WasState extends GameState<WasState, WasAction> {
         this.winner = winner;
     }    
 
+    /**
+     * Method that checks whether a given action is valid or not according to the rules and the board
+     * @param action to check
+     * @return valid
+     */
     public boolean isValid(WasAction action) {
     	boolean valid=false;
         if (isFinished()) {
@@ -78,7 +96,13 @@ public class WasState extends GameState<WasState, WasAction> {
 
         return  valid;
     }
-
+    
+    /**
+     * Method that given the integer representing a player makes a list of his valid actions in the actual moment of
+     * the game and returns it
+     * @param playerNumber
+     * @return list of valid actions
+     */
     public List<WasAction> validActions(int playerNumber) {
     	List<WasAction> valid = new ArrayList<>();
     	if (finished) {
@@ -108,6 +132,11 @@ public class WasState extends GameState<WasState, WasAction> {
         return valid;
 	}
 
+    /**
+     * Method that checks whether a given player has already won the game or not
+     * @param playerNumber
+     * @return
+     */
     public boolean isWinner(int playerNumber) {
         if(playerNumber==WOLF) {
         	return pieces[0].row==0;
@@ -116,10 +145,21 @@ public class WasState extends GameState<WasState, WasAction> {
         }   
     }    
     
+    /**
+     * Method that checks whether the sheeps are blocked or not
+     * @return
+     */
     public boolean sheepBlocked(){
     	return validActions(SHEEP).isEmpty();
     }
 
+    /**
+     * Method that given two integers representing the x and y coordinate of a position in the board, returns
+     * the integer representing what is in the position; wolf: 0, sheep: 1, nothing: -1, out of board: -2
+     * @param row
+     * @param col
+     * @return
+     */
     public int at(int row, int col) {
     	if (row < 0 || col < 0 || row >= dim || col >= dim) return OUTSIDE;
     	int i=0;
