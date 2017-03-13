@@ -80,6 +80,17 @@ public class WasState extends GameState<WasState, WasAction> {
         this.winner = winner;
     }    
 
+    @Override
+    public double evaluate(int playerNumber) {
+    	double v = super.evaluate(playerNumber);
+    	if (v == 0) {
+    		if (playerNumber == WOLF) {
+    			v = (7 - pieces[WOLF].row)*.1;
+    		}
+    	}
+    	return v;
+    }
+    
     /**
      * Method that checks whether a given action is valid or not according to the rules and the board
      * @param action to check
