@@ -131,6 +131,9 @@ public class Main {
 			List<GamePlayer> players = new ArrayList<GamePlayer>();
 			GameState< ?, ? > game;
 			
+			if(args.length == 0)
+				throw new ParameterException("not arguments given");
+			
 			int numJugadores = 0;
 			if (args[0].startsWith("ttt")){
 				game = new TttState(3);
