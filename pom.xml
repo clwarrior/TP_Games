@@ -5,7 +5,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>es.ucm.fdi.tp</groupId>
-    <artifactId>p5_mfreire</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -88,4 +87,5 @@
         </dependency>
     </dependencies>
 
+    <artifactId>Grupo_2-Practica_5</artifactId>
 </project>

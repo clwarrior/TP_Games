@@ -35,7 +35,7 @@ public class ColorChooserExample extends JFrame {
 		// names table
 		tModel = new MyTableModel();
 		tModel.getRowCount();
-		JTable table = new JTable(tModel) {
+		final JTable table = new JTable(tModel) {
 			private static final long serialVersionUID = 1L;
 
 			// THIS IS HOW WE CHANGE THE COLOR OF EACH ROW

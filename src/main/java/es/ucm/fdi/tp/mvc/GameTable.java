@@ -25,6 +25,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         // add code here
     }
     public S getState() {
+		return null;
         // add code here
     }
 
