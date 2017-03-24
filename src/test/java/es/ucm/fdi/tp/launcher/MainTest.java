@@ -15,11 +15,11 @@ public class MainTest {
 		System.setErr(new PrintStream(errContent));
 		
 		Main.main(new String[] { "was", "console", "console", "console" });
-		assertEquals("Error: number of players not suitable\r\n", errContent.toString());
+		assertTrue(errContent.toString().startsWith("Error: " + Main.WrongPlayersNumber));
 		errContent.reset();
 		
 		Main.main(new String[] { "ttt", "random" });
-		assertEquals("Error: number of players not suitable\r\n", errContent.toString());
+		assertTrue(errContent.toString().startsWith("Error: " + Main.WrongPlayersNumber));
 	}
 
 	
@@ -29,7 +29,7 @@ public class MainTest {
 		System.setErr(new PrintStream(errContent));
 		
 		Main.main(new String[] { "chess", "console", "console" });
-		assertEquals("Error: game not available\r\n", errContent.toString());
+		assertTrue(errContent.toString().startsWith("Error: " + Main.WrongGame));
 		errContent.reset();
 	}
 }

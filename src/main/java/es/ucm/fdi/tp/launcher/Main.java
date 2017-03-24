@@ -24,6 +24,11 @@ import java.util.Scanner;
  */
 public class Main {
 
+	final static String NotArguments = "not arguments given";
+	final static String WrongGame = "game not available";
+	final static String WrongPlayersNumber = "number of players not suitable";
+	final static String WrongMatches = "number of matches not suitable";
+	
 	/**
 	 * Array with names to be chosen for the not automatic players.
 	 */
@@ -132,7 +137,7 @@ public class Main {
 			GameState< ?, ? > game;
 			
 			if(args.length == 0)
-				throw new ParameterException("not arguments given");
+				throw new ParameterException(NotArguments);
 			
 			int numJugadores = 0;
 			if (args[0].startsWith("ttt")){
@@ -142,11 +147,11 @@ public class Main {
 				game = new WasState();
 				numJugadores = 2;
 			} else
-				throw new ParameterException("game not available");
+				throw new ParameterException(WrongGame);
 			
 			List<String> names = notRepNames(numJugadores);
 			if(args.length - 1 != numJugadores)
-				throw new ParameterException("number of players not suitable");
+				throw new ParameterException(WrongPlayersNumber);
 			
 			for(int i = 0; i < numJugadores; ++i){
 				if (args[i + 1].startsWith("console")) {
@@ -163,7 +168,7 @@ public class Main {
 			System.out.print("How many times do you want to play? ");
 			int num = s.nextInt();
 			if(num <= 0) {
-				throw new ParameterException("number of matches not suitable");
+				throw new ParameterException(WrongMatches);
 			}
 			else
 				match(game, players.get(0), players.get(1), num);
