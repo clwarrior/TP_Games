@@ -18,7 +18,7 @@ import java.util.Scanner;
 
 
 /**
- * Class main of the application. It's the launcher of the game.
+ * Main class of the application. It's the launcher of the game.
  * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
  * @version 1 (13/03/2017)
  */
