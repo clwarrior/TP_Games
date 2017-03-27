@@ -16,7 +16,7 @@ public class WasState extends GameState<WasState, WasAction> {
 	/**
 	 * Class representing a coordinate on the game board
 	 */
-	static class Coord {
+	public static class Coord {
 		int row;
 		int col;
 		public Coord(int row, int col) { this.row = row; this.col = col; }
@@ -38,7 +38,7 @@ public class WasState extends GameState<WasState, WasAction> {
     private final boolean finished;
     private final int winner;
     private final Coord[] pieces;
-    private final int dim = 8;    
+    public final static int dim = 8;    
        
     /**
      * initial positions for wolf (1st) and sheep (rest)
