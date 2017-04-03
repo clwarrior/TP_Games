@@ -23,11 +23,11 @@ public class WasState extends GameState<WasState, WasAction> {
 		public Coord add(Coord o) {
 			return new Coord(this.row + o.row, this.col + o.col);
 		}
-		public boolean isAt(int row, int col) { return this.row == row && this.col == col; }
+		public boolean isAt(int r, int c) { return r == row && c == col; }
 		public String toString() {
 			return "(" + row + ", " + col + ")";
 		}
-		public Coord clone() {
+		public Coord copy() {
 			return new Coord(row, col);
 		}
 	}
@@ -43,7 +43,7 @@ public class WasState extends GameState<WasState, WasAction> {
     /**
      * initial positions for wolf (1st) and sheep (rest)
      */
-    private final Coord[] initialPositions = {
+    private final static Coord[] initialPositions = {
     		new Coord(dim-1, 0), 
     		new Coord(0, 1), new Coord(0, 3), 
     		new Coord(0, 5), new Coord(0, 7)
@@ -53,7 +53,7 @@ public class WasState extends GameState<WasState, WasAction> {
      * Different coordinates representing how can a player move on the board.
      * A sheep can move as the two first ones and the wolf as the four of them.
      */
-    private final Coord[] moves = {
+    private final static Coord[] moves = {
     		new Coord(1, -1), new Coord(1, 1), 
     		new Coord(-1, -1), new Coord(-1, 1)
     };
@@ -122,17 +122,16 @@ public class WasState extends GameState<WasState, WasAction> {
         Coord newPos;
         if (playerNumber == WOLF){
         	for(int i = 0; i < 4;++i){
-        		newPos = pieces[0].add(this.moves[i]);
+        		newPos = pieces[0].add(moves[i]);
         		WasAction action = new WasAction(playerNumber, newPos, pieces[0]);
         		if (isValid(action)){
         			valid.add(action);
         		}
         	}
-        }
-        else{
+        } else{
         	for(int sheep=1;sheep<5;++sheep){
         		for(int i = 0; i < 2;++i){
-        			newPos = pieces[sheep].add(this.moves[i]);
+        			newPos = pieces[sheep].add(moves[i]);
         			WasAction action = new WasAction(playerNumber, newPos, pieces[sheep]);
         			if (isValid(action)){
         				valid.add(action);
@@ -186,7 +185,7 @@ public class WasState extends GameState<WasState, WasAction> {
     }
     
     public Coord[] getPieces() {
-    	return this.pieces.clone();
+    	return pieces.clone();
     }
 
     public boolean isFinished() {

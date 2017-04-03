@@ -18,8 +18,8 @@ public class WasAction implements GameAction<WasState, WasAction> {
     
     public WasAction(int player, WasState.Coord fin, WasState.Coord ini) {
         this.player = player;
-        this.endPos = fin.clone();
-        this.iniPos = ini.clone();
+        this.endPos = fin.copy();
+        this.iniPos = ini.copy();
         
     }
 
@@ -49,6 +49,9 @@ public class WasAction implements GameAction<WasState, WasAction> {
         if (next.isWinner((state.getTurn()))) {
         	next = new WasState(state, pieces, true, state.getTurn());
         } else if (next.getTurn() == next.SHEEP && next.sheepBlocked()){
+        	/* When the sheeps are blocked, we want to skip their turn.
+        		In order to do this, we use the property of the constructor
+        		change the turn. State is just an auxiliary state.*/
         	state = new WasState(state, pieces, false, -1);
         	next = new WasState(state, pieces, false, -1);
         } else {

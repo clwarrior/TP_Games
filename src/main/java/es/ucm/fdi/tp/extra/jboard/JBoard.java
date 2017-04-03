@@ -13,9 +13,6 @@ import javax.swing.SwingUtilities;
 
 public abstract class JBoard extends JComponent {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4518722262994516431L;
 
 	private int _CELL_HEIGHT = 50;

@@ -8,7 +8,7 @@ import es.ucm.fdi.tp.extra.jboard.JBoard;
 import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameObserver;
 
-public abstract class GenericBoard<S extends GameState<?, ?>> extends JBoard {
+public class GenericBoard<S extends GameState<?, ?>> extends JBoard {
 
 	private static final long serialVersionUID = -7032704505942302353L;
 	
@@ -17,16 +17,6 @@ public abstract class GenericBoard<S extends GameState<?, ?>> extends JBoard {
 	
 	private Color[] playersColor;
 	
-	protected class BoardActionListener implements GameObserver { // Que es esto??
-
-		@Override
-		public void notifyEvent(GameEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		
-	}
 	public GenericBoard(){
 		initializeColors(playersColor);
 	}
@@ -36,8 +26,8 @@ public abstract class GenericBoard<S extends GameState<?, ?>> extends JBoard {
 		initializeColors(playersColor);
 	}
 
-	protected abstract void setState(S state);
-	protected abstract void initializeColors(Color[] c);
+	protected void setState(S state){}
+	protected void initializeColors(Color[] c){}
 	
 	@Override
 	protected void keyTyped(int keyCode) {}
@@ -66,5 +56,15 @@ public abstract class GenericBoard<S extends GameState<?, ?>> extends JBoard {
 	protected int getNumCols() {
 		return cols;
 	}
-
+	@Override
+	protected void mouseClicked(int row, int col, int clickCount,
+			int mouseButton) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	protected Integer getPosition(int row, int col) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

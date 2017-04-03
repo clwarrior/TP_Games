@@ -137,7 +137,7 @@ public class Main {
 			GameState< ?, ? > game;
 			
 			if(args.length == 0)
-				throw new ParameterException(NotArguments);
+				throw new IllegalArgumentException(NotArguments);
 			
 			int numJugadores = 0;
 			if (args[0].startsWith("ttt")){
@@ -169,8 +169,7 @@ public class Main {
 			int num = s.nextInt();
 			if(num <= 0) {
 				throw new ParameterException(WrongMatches);
-			}
-			else
+			} else
 				match(game, players.get(0), players.get(1), num);
 			
 		} catch (ParameterException e) {
