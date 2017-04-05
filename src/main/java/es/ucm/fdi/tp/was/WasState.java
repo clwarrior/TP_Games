@@ -17,8 +17,8 @@ public class WasState extends GameState<WasState, WasAction> {
 	 * Class representing a coordinate on the game board
 	 */
 	public static class Coord {
-		int row;
-		int col;
+		public int row;
+		public int col;
 		public Coord(int row, int col) { this.row = row; this.col = col; }
 		public Coord add(Coord o) {
 			return new Coord(this.row + o.row, this.col + o.col);

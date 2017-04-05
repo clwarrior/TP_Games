@@ -1,55 +1,44 @@
 package es.ucm.fdi.tp.view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
 
 import es.ucm.fdi.tp.base.model.GameState;
-import es.ucm.fdi.tp.extra.jboard.BoardExample;
 import es.ucm.fdi.tp.extra.jboard.JBoard;
-import es.ucm.fdi.tp.extra.jboard.JBoard.Shape;
-import es.ucm.fdi.tp.ttt.TttState;
-import es.ucm.fdi.tp.was.WasState;
 
-import java.lang.Math;
+public abstract class BoardUI< S extends GameState< S, ? > > extends JBoard {
 
-public abstract class BoardUI extends JFrame {
+	private static final long serialVersionUID = -2798902232928717390L;
 	
-	private static final long serialVersionUID = -7704909457104227261L;
+	private ColorTableUI.ColorModel cm;
+	protected S state;
 	
-	protected GameState<?, ?> state;
-	protected JBoard board;
-	
-	public BoardUI(GameState<?, ?> state){
-		super("[=] Wolf and Sheeps [=]");
-		this.state = state;
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.add(board, BorderLayout.CENTER);
-		JPanel sizePabel = new JPanel();
-		mainPanel.add(sizePabel, BorderLayout.PAGE_START);
-		mainPanel.setOpaque(true);
-		this.setContentPane(mainPanel);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(500, 500);
-		this.setVisible(true);
-	}
-
-	protected void setState(WasState state) {
+	public BoardUI(ColorTableUI.ColorModel cm, S state) {
+		this.cm = cm;
 		this.state = state;
 	}
 
-	protected void mouseClicked(int row, int col, int clickCount,
-			int mouseButton) {
-		// TODO Auto-generated method stub
+	@Override
+	protected void keyTyped(int keyCode) {}
+
+	@Override
+	protected abstract void mouseClicked(int row, int col, int clickCount, int mouseButton);
+
+	@Override
+	protected Shape getShape(int player) {
+		return Shape.CIRCLE;
 	}
 
-	protected void initializeColors(Color[] c) {
-		//int red = Math.random(), green = random(255), blue = random(255); // color aleatorio ???
-		c = new Color[]{Color.RED, Color.BLUE};
+	@Override
+	protected Color getColor(int player) {
+		return cm.at(player);
+	}
+
+	@Override
+	protected abstract Integer getPosition(int row, int col);
+
+	
+	@Override
+	protected Color getBackground(int row, int col) {
+		return (row+col) % 2 == 0 ? Color.LIGHT_GRAY : Color.BLACK;
 	}
 }
-

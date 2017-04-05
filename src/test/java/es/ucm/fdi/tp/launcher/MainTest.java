@@ -15,11 +15,11 @@ public class MainTest {
 		System.setErr(new PrintStream(errContent));
 		
 		Main.main(new String[] { "was", "console", "console", "console" });
-		assertTrue(errContent.toString().startsWith("Error: " + Main.WrongPlayersNumber));
+		assertTrue(errContent.toString().startsWith(Main.WrongPlayersNumber));
 		errContent.reset();
 		
 		Main.main(new String[] { "ttt", "random" });
-		assertTrue(errContent.toString().startsWith("Error: " + Main.WrongPlayersNumber));
+		assertTrue(errContent.toString().startsWith(Main.WrongPlayersNumber));
 	}
 
 	
@@ -29,7 +29,7 @@ public class MainTest {
 		System.setErr(new PrintStream(errContent));
 		
 		Main.main(new String[] { "chess", "console", "console" });
-		assertTrue(errContent.toString().startsWith("Error: " + Main.WrongGame));
+		assertTrue(errContent.toString().startsWith(Main.WrongGame));
 		errContent.reset();
 	}
 }

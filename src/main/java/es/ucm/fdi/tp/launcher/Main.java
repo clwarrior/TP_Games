@@ -6,7 +6,6 @@ import es.ucm.fdi.tp.base.model.GamePlayer;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
-import es.ucm.fdi.tp.exceptions.ParameterException;
 import es.ucm.fdi.tp.ttt.TttState;
 import es.ucm.fdi.tp.was.WasState;
 
@@ -24,10 +23,10 @@ import java.util.Scanner;
  */
 public class Main {
 
-	final static String NotArguments = "not arguments given";
-	final static String WrongGame = "game not available";
-	final static String WrongPlayersNumber = "number of players not suitable";
-	final static String WrongMatches = "number of matches not suitable";
+	final static String NotArguments = "Error: not arguments given";
+	final static String WrongGame = "Error: game not available";
+	final static String WrongPlayersNumber = "Error: number of players not suitable";
+	final static String WrongMatches = "Error: number of matches not suitable";
 	
 	/**
 	 * Array with names to be chosen for the not automatic players.
@@ -147,11 +146,11 @@ public class Main {
 				game = new WasState();
 				numJugadores = 2;
 			} else
-				throw new ParameterException(WrongGame);
+				throw new IllegalArgumentException(WrongGame);
 			
 			List<String> names = notRepNames(numJugadores);
 			if(args.length - 1 != numJugadores)
-				throw new ParameterException(WrongPlayersNumber);
+				throw new IllegalArgumentException(WrongPlayersNumber);
 			
 			for(int i = 0; i < numJugadores; ++i){
 				if (args[i + 1].startsWith("console")) {
@@ -161,19 +160,19 @@ public class Main {
 				} else if (args[i + 1].startsWith("smart")){
 					players.add(new SmartPlayer("AI" + names.get(i), 20));
 				} else {
-					throw new ParameterException("player \"" + args[i + 1] + "\" not defined");
+					throw new IllegalArgumentException("player \"" + args[i + 1] + "\" not defined");
 				}
 			}
 			
 			System.out.print("How many times do you want to play? ");
 			int num = s.nextInt();
 			if(num <= 0) {
-				throw new ParameterException(WrongMatches);
+				throw new IllegalArgumentException(WrongMatches);
 			} else
 				match(game, players.get(0), players.get(1), num);
 			
-		} catch (ParameterException e) {
-			System.err.println(e);
+		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
 		}
 	}
 }
