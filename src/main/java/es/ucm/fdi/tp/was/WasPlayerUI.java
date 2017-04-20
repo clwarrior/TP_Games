@@ -109,8 +109,8 @@ public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 		nPanel.add(plMode);
 
 // East Panel
-		JPanel ePanel = new JPanel();
-		ePanel.add(status, BorderLayout.NORTH);
+		JPanel ePanel = new JPanel(new BorderLayout());
+		ePanel.add(status, BorderLayout.CENTER);
 		ePanel.add(colorTable, BorderLayout.SOUTH);
 		
 // Frame	
