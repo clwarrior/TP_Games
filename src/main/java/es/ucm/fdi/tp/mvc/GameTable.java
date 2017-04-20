@@ -10,10 +10,10 @@ import es.ucm.fdi.tp.base.model.GameState;
  */
 public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> implements GameObservable<S, A> {
 
-    // define fields here
+    S initState;
 
     public GameTable(S initState) {
-        // add code here
+        this.initState = initState;
     }
     public void start() {
         // add code here

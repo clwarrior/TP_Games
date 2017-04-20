@@ -1,5 +1,6 @@
 package es.ucm.fdi.tp.view;
 
+import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.was.WasAction;
 import es.ucm.fdi.tp.was.WasState;
@@ -22,7 +23,7 @@ public class WasBoardUI extends BoardUI<WasState> {
 		if (state.getTurn() == state.WOLF) {
 			WasAction action = new WasAction(state.WOLF, state.getPieces()[state.WOLF], click);
 			if (state.isValid(action)) {
-				// execute(state, action) ??
+				// execute
 			}
 		} else {
 			if (state.at(row, col) == state.SHEEP) {
