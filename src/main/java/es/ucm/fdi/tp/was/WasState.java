@@ -35,7 +35,7 @@ public class WasState extends GameState<WasState, WasAction> {
 	private static final long serialVersionUID = -6066312347935012935L;
 	
 	private final int turn;
-    private final boolean finished;
+    private boolean finished;
     private final int winner;
     private final Coord[] pieces;
     public final static int dim = 8;    

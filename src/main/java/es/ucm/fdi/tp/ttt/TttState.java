@@ -15,7 +15,7 @@ public class TttState extends GameState<TttState, TttAction> {
 	private static final long serialVersionUID = -2641387354190472377L;
 	
 	private final int turn;
-    private final boolean finished;
+    private boolean finished;
     private final int[][] board;
     private final int winner;
 
