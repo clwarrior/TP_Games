@@ -1,29 +1,34 @@
 package es.ucm.fdi.tp.view;
 
+import java.awt.event.ActionEvent;
+
 import es.ucm.fdi.tp.mvc.GameEvent;
+import es.ucm.fdi.tp.mvc.GameEvent.EventType;
+import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.was.WasAction;
 import es.ucm.fdi.tp.was.WasState;
 import es.ucm.fdi.tp.was.WasState.Coord;
 
-public class WasBoardUI extends BoardUI<WasState> {
+public class WasBoardUI extends BoardUI<WasState, WasAction> {
 
 	private static final long serialVersionUID = -6806220148484079355L;
 
 	private Coord selected;
 
-	public WasBoardUI(ColorModel cm, WasState state) {
-		super(cm, state);
+	public WasBoardUI(ColorModel cm, GameTable<WasState, WasAction> game) {
+		super(cm, game);
 		this.selected = null;
 	}
 
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
 		Coord click = new Coord(row, col);
+		WasState state = game.getState();
 		if (state.getTurn() == state.WOLF) {
 			WasAction action = new WasAction(state.WOLF, state.getPieces()[state.WOLF], click);
 			if (state.isValid(action)) {
-				// execute
+				game.execute(action);
 			}
 		} else {
 			if (state.at(row, col) == state.SHEEP) {
@@ -31,7 +36,7 @@ public class WasBoardUI extends BoardUI<WasState> {
 			} else if (selected != null && state.at(selected.row, selected.col) == state.SHEEP) {
 				WasAction action = new WasAction(state.SHEEP, selected, click);
 				if (state.isValid(action)) {
-					// execute(state, action) ??
+					game.execute(action);
 				}
 			}
 		}
@@ -39,6 +44,7 @@ public class WasBoardUI extends BoardUI<WasState> {
 
 	@Override
 	protected Integer getPosition(int row, int col) {
+		WasState state = game.getState();
 		if(state.at(row, col) != state.EMPTY)
 			return state.at(row, col);
 		else
@@ -53,6 +59,11 @@ public class WasBoardUI extends BoardUI<WasState> {
 	@Override
 	protected int getNumCols() {
 		return WasState.dim;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		mouseClicked(e);
 	}
 
 }

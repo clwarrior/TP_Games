@@ -1,20 +1,23 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
+import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.extra.jboard.JBoard;
+import es.ucm.fdi.tp.mvc.GameTable;
 
-public abstract class BoardUI< S extends GameState< S, ? > > extends JBoard {
+public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction< S, A > > extends JBoard implements ActionListener{
 
 	private static final long serialVersionUID = -2798902232928717390L;
 	
 	private ColorTableUI.ColorModel cm;
-	protected S state;
+	protected GameTable<S, A> game;
 	
-	public BoardUI(ColorTableUI.ColorModel cm, S state) {
+	public BoardUI(ColorTableUI.ColorModel cm, GameTable<S, A> game) {
 		this.cm = cm;
-		this.state = state;
+		this.game = game;
 	}
 
 	@Override

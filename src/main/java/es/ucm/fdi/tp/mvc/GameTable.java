@@ -17,14 +17,14 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
     private S actualState;
     private boolean finished;
     private boolean started;
-    private Set< GameObserver< S, A > > obs;
+    private ArrayList< GameObserver< S, A > > obs;
 
     public GameTable(S initState) {
         this.initState = initState;
         this.actualState = null;
         this.started = false;
         this.finished = false;
-        this.obs.clear();
+        this.obs = new ArrayList< GameObserver< S, A > >();
     }
     public void start() {
         actualState = initState;
@@ -74,7 +74,9 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
     public void removeObserver(GameObserver<S, A> o) {
         obs.remove(o);
     }
-    public void nofifyObservers() {
-    	
+    public void nofifyObservers(GameEvent<S, A> e) {
+    	for(GameObserver<S, A> a : obs){
+    		a.notifyEvent(e);
+    	}
     }
 }

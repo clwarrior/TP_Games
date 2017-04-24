@@ -154,7 +154,7 @@ public class Main {
 			
 			for(int i = 0; i < numJugadores; ++i){
 				if (args[i + 1].startsWith("console")) {
-					players.add(new ConsolePlayer(ConsolePlayer.askName(s), s));
+					players.add(new ConsolePlayer(names.get(i), s));
 				} else if (args[i + 1].startsWith("rand")){
 					players.add(new RandomPlayer("Random" + names.get(i)));
 				} else if (args[i + 1].startsWith("smart")){

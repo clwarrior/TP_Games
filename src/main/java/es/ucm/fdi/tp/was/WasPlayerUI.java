@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +29,15 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
+import es.ucm.fdi.tp.mvc.GameEvent;
+import es.ucm.fdi.tp.mvc.GameObserver;
+import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.*;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 
-public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
+public class WasPlayerUI extends PlayerUI< WasState, WasAction > implements GameObserver<WasState, WasAction>, ActionListener{
 
-	public WasPlayerUI(WasState state) {
+	public WasPlayerUI(GameTable<WasState, WasAction> game) {
 		
 		FrameUI jf = new FrameUI("Wolf and Sheeps");
 		Border b = BorderFactory.createLineBorder(Color.BLACK, 2, false);
@@ -52,9 +57,10 @@ public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 				TitledBorder.CENTER, TitledBorder.TOP));
 		
 // Color Table
-		final ColorModel cm = new ColorTableUI().new ColorModel(state.getPlayerCount());
-		ColorTableUI ct = new ColorTableUI(state.getPlayerCount(), 2);
-		for(int i = 0; i < state.getPlayerCount(); ++i) {
+		int numPlayers = game.getState().getPlayerCount();
+		final ColorModel cm = new ColorTableUI().new ColorModel(numPlayers);
+		ColorTableUI ct = new ColorTableUI(numPlayers, 2);
+		for(int i = 0; i < numPlayers; ++i) {
 			ct.setValueAt("Player " + i, i, 0);
 			ct.setValueAt("", i, 1);
 		}
@@ -101,7 +107,7 @@ public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 		plMode.add(mode);
 		
 // Board
-		WasBoardUI board = new WasBoardUI(cm, state);
+		WasBoardUI board = new WasBoardUI(cm, game);
 		
 // North Panel
 		JPanel nPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -122,6 +128,7 @@ public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 	public JButton createButton(String image) {
 		JButton b = new JButton();
 		b.setIcon(new ImageIcon("src/main/resources/" + image));
+		b.addActionListener(this);
 		b.setPreferredSize(new Dimension(45, 45));
 		return b;
 	}
@@ -129,9 +136,21 @@ public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 	public static void main(String ... args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new WasPlayerUI(new WasState());
+				new WasPlayerUI(new GameTable<WasState, WasAction>(new WasState()));
 			}
 		});
+	}
+
+	@Override
+	public void notifyEvent(GameEvent<WasState, WasAction> e) {
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == bRandom){
+			
+		}
 	}
 	
 }
