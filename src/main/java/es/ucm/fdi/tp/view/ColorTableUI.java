@@ -1,9 +1,13 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
 import java.util.Random;
 
+import javax.swing.JFrame;
 import javax.swing.table.AbstractTableModel;
+
+import es.ucm.fdi.tp.extra.jcolor.ColorChooser;
 
 public class ColorTableUI extends AbstractTableModel {
 
@@ -24,6 +28,10 @@ public class ColorTableUI extends AbstractTableModel {
 			return colors[num];
 		}
 
+		public void put(int num, Color color){
+			colors[num] = color;
+		}
+		
 		private Color randColor() {
 			int red, green, blue;
 			Random aux = new Random();
@@ -32,21 +40,24 @@ public class ColorTableUI extends AbstractTableModel {
 			blue = aux.nextInt(256);
 			return new Color(red, green, blue);
 		}
-
 	}
 
 	private String[] columnNames;
 	private String[][] table;
 	private int numRows;
 	private int numCols;
+	private ColorChooser colorChooser;
+	private ColorModel cm;
 	
 	public ColorTableUI() {}
 
-	public ColorTableUI(int numRows, int numCols) {
+	public ColorTableUI(int numRows, int numCols, ColorModel cm) {
 		columnNames = new String[]{"Players", "Colors"};
 		table = new String[numRows][numCols];
 		this.numCols = numCols;
 		this.numRows = numRows;
+		this.cm = cm;
+		this.colorChooser = new ColorChooser(new JFrame(), "Choose a color", cm.at(0));
 	}
 
 	@Override
@@ -97,5 +108,17 @@ public class ColorTableUI extends AbstractTableModel {
 			throw new IndexOutOfBoundsException("Table subscript out of range");
 		else
 			return String.class;
+	}	
+	
+	public void changeColor(int row) {
+		colorChooser.setSelectedColorDialog(cm.at(row));
+		colorChooser.openDialog();
+		if (colorChooser.getColor() != null) {
+			cm.put(row, colorChooser.getColor());
+		}
+	}
+	
+	public ColorModel getCM(){
+		return cm;
 	}
 }

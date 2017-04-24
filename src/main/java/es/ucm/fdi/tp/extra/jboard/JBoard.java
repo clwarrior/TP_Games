@@ -15,8 +15,8 @@ public abstract class JBoard extends JComponent {
 
 	private static final long serialVersionUID = -4518722262994516431L;
 
-	private int _CELL_HEIGHT = 50;
-	private int _CELL_WIDTH = 50;
+	public int _CELL_HEIGHT = 50;
+	public int _CELL_WIDTH = 50;
 	private int _SEPARATOR = -2;
 
 	public enum Shape {

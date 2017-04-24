@@ -29,6 +29,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
     public void start() {
         actualState = initState;
         started = true;
+        finished = false;
         // notificar observers
     }
     public void stop() {
@@ -48,18 +49,19 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         	GameError error = new GameError("The game is stopped or not started");
         	GameEvent< S, A > event = 
     				new GameEvent< S, A >(EventType.Error, null, null, error, null);
-        	// notificar
+        	notifyObservers(event);
         } else {
         	try {
         		S newState = action.applyTo(actualState);
         		actualState = newState;
         		GameEvent< S, A > event = new GameEvent< S, A >(EventType.Change, 
         				action, actualState, null, "");
+        		notifyObservers(event);
         	} catch (IllegalArgumentException e) {
         		GameError error = new GameError("The game is stopped or not started");
             	GameEvent< S, A > event = 
         				new GameEvent< S, A >(EventType.Error, null, null, error, null);
-            	// notificar
+            	notifyObservers(event);
             	throw error;
         	}
         }
@@ -74,7 +76,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
     public void removeObserver(GameObserver<S, A> o) {
         obs.remove(o);
     }
-    public void nofifyObservers(GameEvent<S, A> e) {
+    public void notifyObservers(GameEvent<S, A> e) {
     	for(GameObserver<S, A> a : obs){
     		a.notifyEvent(e);
     	}

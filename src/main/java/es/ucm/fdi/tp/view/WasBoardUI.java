@@ -1,7 +1,11 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+
+import es.ucm.fdi.tp.extra.jboard.JBoard;
 import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameEvent.EventType;
 import es.ucm.fdi.tp.mvc.GameTable;
@@ -24,6 +28,7 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
 		Coord click = new Coord(row, col);
+		System.out.println("Me has hecho click en " + row + " " + col); //Mensaje debug
 		WasState state = game.getState();
 		if (state.getTurn() == state.WOLF) {
 			WasAction action = new WasAction(state.WOLF, state.getPieces()[state.WOLF], click);
@@ -60,10 +65,4 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 	protected int getNumCols() {
 		return WasState.dim;
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		mouseClicked(e);
-	}
-
 }
