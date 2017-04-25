@@ -10,18 +10,23 @@ import javax.swing.SwingUtilities;
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.extra.jboard.JBoard;
+import es.ucm.fdi.tp.mvc.GameEvent;
+import es.ucm.fdi.tp.mvc.GameEvent.EventType;
+import es.ucm.fdi.tp.mvc.GameObserver;
 import es.ucm.fdi.tp.mvc.GameTable;
 
-public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction< S, A > > extends JBoard{
+public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction< S, A > > extends JBoard implements GameObserver<S, A>{
 
 	private static final long serialVersionUID = -2798902232928717390L;
 	
 	private ColorTableUI.ColorModel cm;
-	protected GameTable<S, A> game;
+	protected GUIController<S, A> ctrl;
+	protected S state;
 	
-	public BoardUI(ColorTableUI.ColorModel cm, GameTable<S, A> game) {
+	public BoardUI(GUIController<S, A> ctrl, ColorTableUI.ColorModel cm, S state) {
 		this.cm = cm;
-		this.game = game;
+		this.ctrl = ctrl;
+		this.state = state;
 		this.addMouseListener(new MouseListener(){
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -78,5 +83,12 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	@Override
 	protected Color getBackground(int row, int col) {
 		return (row+col) % 2 == 0 ? Color.LIGHT_GRAY : Color.BLACK;
+	}
+	
+	@Override
+	public void notifyEvent(GameEvent<S, A> e){
+		if(e.getType() == EventType.Change){
+			repaint();
+		}
 	}
 }

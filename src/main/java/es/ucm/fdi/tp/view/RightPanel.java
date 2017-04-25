@@ -23,16 +23,13 @@ import es.ucm.fdi.tp.mvc.GameObservable;
 import es.ucm.fdi.tp.mvc.GameObserver;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 
-public class RightPanel <S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel{
+public class RightPanel <S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel implements GameObserver<S, A>{
 
 	private static final long serialVersionUID = 5798952159009121986L;
-	
-	ArrayList<GameObserver<S, A>> obs;
 
 	public RightPanel(int numPlayers, ColorModel cm){
 		
 		Border b = BorderFactory.createLineBorder(Color.BLACK, 2, false);
-		obs = new ArrayList<GameObserver<S, A>>();
 		
 	// Status Messages
 			String messages = "Hola\nEsto\nEs\nUn\nTexto\nMuy\nLargo\nPara\nVer\nSi\nFunciona la barrita y lo del salto de linea automatico";
@@ -78,7 +75,6 @@ public class RightPanel <S extends GameState<S, A>, A extends GameAction<S, A>> 
 						
 					}
 				}
-
 			});
 			JScrollPane colorTable = new JScrollPane(colors);
 			colorTable.setPreferredSize(new Dimension(200, 200));
@@ -90,4 +86,13 @@ public class RightPanel <S extends GameState<S, A>, A extends GameAction<S, A>> 
 			this.add(status, BorderLayout.CENTER);
 			this.add(colorTable, BorderLayout.SOUTH);
 	}
+
+	@Override
+	public void notifyEvent(GameEvent<S, A> e) {
+		if(e.getType() == EventType.Change){
+			repaint();
+		}
+	}
+
+	
 }

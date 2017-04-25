@@ -117,8 +117,4 @@ public class ColorTableUI extends AbstractTableModel {
 			cm.put(row, colorChooser.getColor());
 		}
 	}
-	
-	public ColorModel getCM(){
-		return cm;
-	}
 }

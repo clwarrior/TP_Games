@@ -6,7 +6,10 @@ import es.ucm.fdi.tp.base.model.GamePlayer;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
+import es.ucm.fdi.tp.mvc.GameTable;
+import es.ucm.fdi.tp.ttt.TttAction;
 import es.ucm.fdi.tp.ttt.TttState;
+import es.ucm.fdi.tp.was.WasAction;
 import es.ucm.fdi.tp.was.WasState;
 
 import java.util.ArrayList;
@@ -125,6 +128,30 @@ public class Main {
 		System.out.println("Result: " + va + " for " + a.getName() + " vs " + vb + " for " + b.getName());
 	}
 
+	private static GameTable<?, ?> createGame(String gType){
+		switch(gType){
+		case "ttt":
+			return new GameTable<TttState, TttAction>(new TttState(3)); //dimension
+		case "was":
+			return new GameTable<WasState, WasAction>(new WasState());
+		}
+		return null;
+	}
+	private static <S extends GameState<S, A>, A extends GameAction<S, A>> void startConsoleMode(String gType, GameTable<S, A> game, String playerModes[]){
+		List<GamePlayer> players = new ArrayList<GamePlayer>(); //___________________________________________________________________________________
+		for(int i = 0; i < numJugadores; ++i){
+			if (args[i + 1].startsWith("console")) {
+				players.add(new ConsolePlayer(names.get(i), s));
+			} else if (args[i + 1].startsWith("rand")){
+				players.add(new RandomPlayer("Random" + names.get(i)));
+			} else if (args[i + 1].startsWith("smart")){
+				players.add(new SmartPlayer("AI" + names.get(i), 20));
+			} else {
+				throw new IllegalArgumentException("player \"" + args[i + 1] + "\" not defined");
+			}
+		}
+	
+	}
 	/**
 	 * Main method.
 	 * 

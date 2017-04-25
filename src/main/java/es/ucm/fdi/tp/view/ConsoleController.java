@@ -43,29 +43,29 @@ public class ConsoleController<S extends GameState<S, A>, A extends GameAction<S
 			game.execute(action);
 			currentState = game.getState();
 			GameEvent<S, A> afterAct = new GameEvent<S,A>(EventType.Change, action, currentState,
-					null, "After action:\n" + toString(currentState));
+					null, "After action:\n" + currentState.toString());
+			game.notifyObservers(afterAct);
 
 			if (currentState.isFinished()) {
 				// game over
 				GameEvent<S, A> end = new GameEvent<S,A>(EventType.Info, null, null, null, "The game ended: ");
+				game.notifyObservers(end);
 				int winner = currentState.getWinner();
 				if (winner == -1) {
-					endText += "draw!";
+					GameEvent<S, A> draw = new GameEvent<S,A>(EventType.Info, null, null, null, "draw!");
+					game.notifyObservers(draw);
 				} else {
-					endText += "player " + (winner + 1) + " (" + players.get(winner).getName() + ") won!";
+					GameEvent<S, A> win = new GameEvent<S,A>(EventType.Info, null, null, null,
+							"player " + (winner + 1) + " (" + players.get(winner).getName() + ") won!");
+					game.notifyObservers(win);
 				}
-				System.out.println(endText);
 				game.stop();
 			}
 		}
-		return currentState.getWinner();
 	}
 
 	private String toString(S currentState) {
-		// TODO Auto-generated method stub
-		return null;
+		return currentState.toString();
 	}
-	
-	void 
 
 }

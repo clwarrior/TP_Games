@@ -30,18 +30,20 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         actualState = initState;
         started = true;
         finished = false;
-        // notificar observers
+        GameEvent< S, A> start= new GameEvent< S, A >(EventType.Start, null, actualState, null, null);
+        notifyObservers(start);
     }
     public void stop() {
     	if(!finished) {
     		finished = true;
-    		// notificar observers
+    		GameEvent< S, A > stop = new GameEvent<S, A>(EventType.Stop, null, null, null, null);
+    		notifyObservers(stop);
     	} else {
     		GameError error = new GameError("The game is already stopped");
     		GameEvent< S, A > event = 
     				new GameEvent< S, A >(EventType.Error, null, null, error, null);
+    		notifyObservers(event);
     		throw error;
-    		// notificar observers
     	}
     }
     public void execute(A action) {

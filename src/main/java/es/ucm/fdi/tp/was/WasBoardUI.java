@@ -1,17 +1,10 @@
-package es.ucm.fdi.tp.view;
+package es.ucm.fdi.tp.was;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-
-import javax.swing.SwingUtilities;
-
-import es.ucm.fdi.tp.extra.jboard.JBoard;
-import es.ucm.fdi.tp.mvc.GameEvent;
-import es.ucm.fdi.tp.mvc.GameEvent.EventType;
 import es.ucm.fdi.tp.mvc.GameTable;
+import es.ucm.fdi.tp.view.BoardUI;
+import es.ucm.fdi.tp.view.ColorTableUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
-import es.ucm.fdi.tp.was.WasAction;
-import es.ucm.fdi.tp.was.WasState;
+import es.ucm.fdi.tp.view.GUIController;
 import es.ucm.fdi.tp.was.WasState.Coord;
 
 public class WasBoardUI extends BoardUI<WasState, WasAction> {
@@ -20,20 +13,18 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 
 	private Coord selected;
 
-	public WasBoardUI(ColorModel cm, GameTable<WasState, WasAction> game) {
-		super(cm, game);
+	public WasBoardUI(GUIController<WasState, WasAction> ctrl, ColorModel cm, WasState state) {
+		super(ctrl, cm, state);
 		this.selected = null;
 	}
 
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
 		Coord click = new Coord(row, col);
-		System.out.println("Me has hecho click en " + row + " " + col); //Mensaje debug
-		WasState state = game.getState();
 		if (state.getTurn() == state.WOLF) {
 			WasAction action = new WasAction(state.WOLF, state.getPieces()[state.WOLF], click);
 			if (state.isValid(action)) {
-				game.execute(action);
+				ctrl.makeManualMove(action);
 			}
 		} else {
 			if (state.at(row, col) == state.SHEEP) {
@@ -41,7 +32,7 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 			} else if (selected != null && state.at(selected.row, selected.col) == state.SHEEP) {
 				WasAction action = new WasAction(state.SHEEP, selected, click);
 				if (state.isValid(action)) {
-					game.execute(action);
+					ctrl.makeManualMove(action);
 				}
 			}
 		}
@@ -49,7 +40,6 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 
 	@Override
 	protected Integer getPosition(int row, int col) {
-		WasState state = game.getState();
 		if(state.at(row, col) != state.EMPTY)
 			return state.at(row, col);
 		else
