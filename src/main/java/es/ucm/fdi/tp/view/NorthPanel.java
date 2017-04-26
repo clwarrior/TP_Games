@@ -6,86 +6,108 @@ import java.awt.FlowLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
-import es.ucm.fdi.tp.mvc.*;
-import es.ucm.fdi.tp.view.GUIController.PlayerMode;
+import es.ucm.fdi.tp.view.PlayerUI.PlayerMode;
 
-public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel{
+public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel {
 
 	private static final long serialVersionUID = -8845489814772928993L;
 	
-	public NorthPanel(GUIController<S, A> ctrl){
-	// Buttons
-			JButton bRandom = createButton("dice", "Make random movement", ctrl);
-			JButton bSmart = createButton("nerd", "Make smart movement", ctrl);
-			JButton bRestart = createButton("restart", "Restart game", ctrl);
-			JButton bExit = createButton("exit", "Close game", ctrl);
-			
-			JPanel buttons = new JPanel();
-			buttons.add(bRandom);
-			buttons.add(bSmart);
-			buttons.add(bRestart);
-			buttons.add(bExit);
-	
-	// Player Mode
-			String modes[] = {"Manual", "Random", "Smart"};
-			JComboBox< String > mode = new JComboBox<String>(modes);
-			mode.setSelectedIndex(0);
-			mode.addActionListener((e) -> {
-				PlayerMode pMode = null;
-				switch(mode.getSelectedIndex()){
-				case 0:
-					pMode = PlayerMode.Manual;
-					break;
-				case 1:
-					pMode = PlayerMode.Random;
-					break;
-				case 2:
-					pMode = PlayerMode.Smart;
-					break;
-				}
-				ctrl.changePlayerMode(pMode);
-			});
-			
-			JLabel modeText = new JLabel("Player Mode: ");
-			
-			JPanel plMode = new JPanel();
-			plMode.add(modeText);
-			plMode.add(mode);
-	
-	// North Panel
-			this.setLayout(new FlowLayout(FlowLayout.LEFT));
-			this.add(buttons);
-			this.add(plMode);
+	public interface NorthPanelListener{
+		public void makeRandomMove();
+		public void makeSmartMove();
+		public void restartGame();
+		public void closeGame();
+		public void changePlayerMode(PlayerMode p);
 	}
-	
-	public JButton createButton(String image, String message, GUIController<S, A> ctrl) {
+
+	private JButton bRandom;
+	private JButton bSmart;
+	private JButton bRestart;
+	private JButton bExit;
+	private JComboBox<String> mode;
+	private NorthPanelListener listener;
+
+	public NorthPanel(NorthPanelListener listener) {
+
+		String modes[] = { "Manual", "Random", "Smart" };
+
+		this.listener = listener;
+
+		this.bRandom = new JButton();
+		this.bSmart = new JButton();
+		this.bRestart = new JButton();
+		this.bExit = new JButton();
+
+		this.mode = new JComboBox<String>(modes);
+		
+		initGUI();
+
+	}
+
+	private void initGUI() {
+		// Buttons
+		bRandom = createButton("dice", "Make random movement");
+		bSmart = createButton("nerd", "Make smart movement");
+		bRestart = createButton("restart", "Restart game");
+		bExit = createButton("exit", "Close game");
+
+		JPanel buttons = new JPanel();
+		buttons.add(bRandom);
+		buttons.add(bSmart);
+		buttons.add(bRestart);
+		buttons.add(bExit);
+
+		// Player Mode
+		mode.setSelectedIndex(0);
+		mode.addActionListener((e) -> {
+			PlayerUI.PlayerMode pMode = null;
+			switch (mode.getSelectedIndex()) {
+			case 0:
+				pMode = PlayerUI.PlayerMode.Manual;
+				break;
+			case 1:
+				pMode = PlayerUI.PlayerMode.Random;
+				break;
+			case 2:
+				pMode = PlayerUI.PlayerMode.Smart;
+				break;
+			}
+			listener.changePlayerMode(pMode);
+		});
+
+		JLabel modeText = new JLabel("Player Mode: ");
+
+		JPanel plMode = new JPanel();
+		plMode.add(modeText);
+		plMode.add(mode);
+
+		// North Panel
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
+		this.add(buttons);
+		this.add(plMode);
+	}
+
+	private JButton createButton(String image, String message) {
 		JButton b = new JButton();
 		b.setIcon(new ImageIcon("src/main/resources/" + image + ".png"));
 		b.addActionListener((e) -> {
-			switch(image){
+			switch (image) {
 			case "dice":
-				ctrl.makeRandomMove();
+				listener.makeRandomMove();
 				break;
 			case "nerd":
-				ctrl.makeSmartMove();
+				listener.makeSmartMove();
 				break;
 			case "restart":
-				ctrl.restartGame();
+				listener.restartGame();
 				break;
 			case "exit":
-				int answer = JOptionPane.showOptionDialog
-				(new JFrame(), "Do you really want to exit?", "Confirm Exit", 
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-						null, new String[]{"Yes, I want to leave", "No, I'd rather stay"}, new String("Yes, I want to leave"));
-				if(answer == JOptionPane.YES_OPTION)
-					System.exit(0);
+				listener.closeGame();
 				break;
 			}
 		});

@@ -13,8 +13,8 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 
 	private Coord selected;
 
-	public WasBoardUI(GUIController<WasState, WasAction> ctrl, ColorModel cm, WasState state) {
-		super(ctrl, cm, state);
+	public WasBoardUI(ColorModel cm, WasState state) {
+		super(cm, state);
 		this.selected = null;
 	}
 
