@@ -8,8 +8,12 @@ import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
 import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.ttt.TttAction;
+import es.ucm.fdi.tp.ttt.TttPlayerUI;
 import es.ucm.fdi.tp.ttt.TttState;
+import es.ucm.fdi.tp.view.ConsoleController;
+import es.ucm.fdi.tp.view.ConsoleView;
 import es.ucm.fdi.tp.was.WasAction;
+import es.ucm.fdi.tp.was.WasPlayerUI;
 import es.ucm.fdi.tp.was.WasState;
 
 import java.util.ArrayList;
@@ -26,7 +30,7 @@ import java.util.Scanner;
  */
 public class Main {
 
-	final static String NotArguments = "Error: not arguments given";
+	final static String NotArguments = "Error: number of arguments not suitable";
 	final static String WrongGame = "Error: game not available";
 	final static String WrongPlayersNumber = "Error: number of players not suitable";
 	final static String WrongMatches = "Error: number of matches not suitable";
@@ -96,38 +100,6 @@ public class Main {
 		}
 		return currentState.getWinner();
 	}
-
-	/**
-	 * Repeatedly plays a game with a vs b
-	 * 
-	 * @param initialState
-	 * @param a
-	 *            player
-	 * @param b
-	 *            player
-	 * @param times
-	 *            to play
-	 */
-	public static void match(GameState<?, ?> initialState, GamePlayer a, GamePlayer b, int times) {
-		int va = 0, vb = 0;
-
-		List<GamePlayer> players = new ArrayList<GamePlayer>();
-		players.add(a);
-		players.add(b);
-
-		for (int i = 0; i < times; i++) {
-			switch (playGame(initialState, players)) {
-			case 0:
-				va++;
-				break;
-			case 1:
-				vb++;
-				break;
-			}
-		}
-		System.out.println("Result: " + va + " for " + a.getName() + " vs " + vb + " for " + b.getName());
-	}
-
 	private static GameTable<?, ?> createGame(String gType){
 		switch(gType){
 		case "ttt":
@@ -137,69 +109,79 @@ public class Main {
 		}
 		return null;
 	}
-	private static <S extends GameState<S, A>, A extends GameAction<S, A>> void startConsoleMode(String gType, GameTable<S, A> game, String playerModes[]){
-		List<GamePlayer> players = new ArrayList<GamePlayer>(); //___________________________________________________________________________________
-		for(int i = 0; i < numJugadores; ++i){
-			if (args[i + 1].startsWith("console")) {
-				players.add(new ConsolePlayer(names.get(i), s));
-			} else if (args[i + 1].startsWith("rand")){
+	private static <S extends GameState<S, A>, A extends GameAction<S, A>> void startConsoleMode(GameTable<S, A> game, String playerModes[]){
+		List<GamePlayer> players = new ArrayList<GamePlayer>();
+		List<String> names = notRepNames(playerModes.length);
+		for(int i = 0; i < playerModes.length; ++i){
+			if (playerModes[i].startsWith("manual")) {
+				players.add(new ConsolePlayer(names.get(i), new Scanner(System.in)));
+			} else if (playerModes[i].startsWith("rand")){
 				players.add(new RandomPlayer("Random" + names.get(i)));
-			} else if (args[i + 1].startsWith("smart")){
+			} else if (playerModes[i].startsWith("smart")){
 				players.add(new SmartPlayer("AI" + names.get(i), 20));
 			} else {
-				throw new IllegalArgumentException("player \"" + args[i + 1] + "\" not defined");
+				throw new IllegalArgumentException("player \"" + playerModes[i] + "\" not defined");
 			}
 		}
-	
+		new ConsoleView<S, A>(game);
+		new ConsoleController<S, A>(players, game);
 	}
+	@SuppressWarnings("unchecked")
+	private static <S extends GameState<S, A>, A extends GameAction<S, A>> 
+	void startGUIMode(String gType, GameTable<S, A> game, String playerModes[]) {
+		List<GamePlayer> players = new ArrayList<GamePlayer>();
+ 		List<String> names = notRepNames(playerModes.length);
+		if(gType == "ttt"){
+			List<TttPlayerUI> windows = new ArrayList<TttPlayerUI>();
+			for(int i = 0; i < playerModes.length; ++i){
+			players.add(new ConsolePlayer(names.get(i), new Scanner(System.in)));
+				windows.add(new TttPlayerUI((GameTable<TttState, TttAction>)game, players.get(i).getName(), i));
+			}
+		} else{
+			List<WasPlayerUI> windows = new ArrayList<WasPlayerUI>();
+			for(int i = 0; i < playerModes.length; ++i){
+			players.add(new ConsolePlayer(names.get(i), new Scanner(System.in)));
+				windows.add(new WasPlayerUI((GameTable<WasState, WasAction>)game, players.get(i).getName(), i));
+		}
+		}
+	}
+	
+	
+	public static void usage(){
+		System.out.println(NotArguments);
+	}
+	
 	/**
 	 * Main method.
 	 * 
 	 * @param args
 	 */
-	public static void main(String... args) {				
-		try (Scanner s = new Scanner(System.in)) {
-			List<GamePlayer> players = new ArrayList<GamePlayer>();
-			GameState< ?, ? > game;
-			
-			if(args.length == 0)
-				throw new IllegalArgumentException(NotArguments);
-			
-			int numJugadores = 0;
-			if (args[0].startsWith("ttt")){
-				game = new TttState(3);
-				numJugadores = 2;
-			} else if (args[0].startsWith("was")){
-				game = new WasState();
-				numJugadores = 2;
-			} else
-				throw new IllegalArgumentException(WrongGame);
-			
-			List<String> names = notRepNames(numJugadores);
-			if(args.length - 1 != numJugadores)
-				throw new IllegalArgumentException(WrongPlayersNumber);
-			
-			for(int i = 0; i < numJugadores; ++i){
-				if (args[i + 1].startsWith("console")) {
-					players.add(new ConsolePlayer(names.get(i), s));
-				} else if (args[i + 1].startsWith("rand")){
-					players.add(new RandomPlayer("Random" + names.get(i)));
-				} else if (args[i + 1].startsWith("smart")){
-					players.add(new SmartPlayer("AI" + names.get(i), 20));
-				} else {
-					throw new IllegalArgumentException("player \"" + args[i + 1] + "\" not defined");
-				}
-			}
-			
-			System.out.print("How many times do you want to play? ");
-			int num = s.nextInt();
-			if(num <= 0) {
-				throw new IllegalArgumentException(WrongMatches);
-			} else
-				match(game, players.get(0), players.get(1), num);
-			
-		} catch (IllegalArgumentException e) {
-			System.err.println(e.getMessage());
+	public static void main(String ... args) {
+		if (args.length < 2) {
+			usage();
+			System.exit(1);
+		}
+		GameTable<?, ?> game = createGame(args[0]);
+		if (game == null) {
+			System.err.println("Invalid game");
+			System.exit(1);
+		}
+		String[] playerModes = Arrays.copyOfRange(args, 2, args.length);
+		if (game.getState().getPlayerCount() != playerModes.length) {
+			System.err.println("Invalid number of players");
+			System.exit(1);
+		}
+		switch (args[1]) {
+		case "console":
+			startConsoleMode(game, playerModes);
+			break;
+		case "gui":
+			startGUIMode(args[0], game, playerModes);
+			break;
+		default:
+			System.err.println("Invalid view mode: " + args[1]);
+			usage();
+			System.exit(1);
 		}
 	}
 }

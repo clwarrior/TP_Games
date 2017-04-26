@@ -1,7 +1,6 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
 import java.util.Random;
 
 import javax.swing.JFrame;

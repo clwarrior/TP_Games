@@ -1,8 +1,6 @@
 package es.ucm.fdi.tp.mvc;
 
 import java.util.ArrayList;
-import java.util.Set;
-
 import es.ucm.fdi.tp.base.model.*;
 import es.ucm.fdi.tp.mvc.GameEvent.EventType;
 
@@ -13,7 +11,7 @@ import es.ucm.fdi.tp.mvc.GameEvent.EventType;
  */
 public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> implements GameObservable<S, A> {
 
-    private S initState;
+    private S initState; //QUE NO SE COPIEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     private S actualState;
     private boolean finished;
     private boolean started;
@@ -21,7 +19,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
 
     public GameTable(S initState) {
         this.initState = initState;
-        this.actualState = null;
+        this.actualState = initState;
         this.started = false;
         this.finished = false;
         this.obs = new ArrayList< GameObserver< S, A > >();
@@ -30,13 +28,13 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         actualState = initState;
         started = true;
         finished = false;
-        GameEvent< S, A> start= new GameEvent< S, A >(EventType.Start, null, actualState, null, null);
+        GameEvent< S, A> start = new GameEvent< S, A >(EventType.Start, null, actualState, null, "The game has started");
         notifyObservers(start);
     }
     public void stop() {
     	if(!finished) {
     		finished = true;
-    		GameEvent< S, A > stop = new GameEvent<S, A>(EventType.Stop, null, null, null, null);
+    		GameEvent< S, A > stop = new GameEvent<S, A>(EventType.Stop, null, null, null, "The game has stopped");
     		notifyObservers(stop);
     	} else {
     		GameError error = new GameError("The game is already stopped");

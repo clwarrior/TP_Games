@@ -1,7 +1,6 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -11,22 +10,26 @@ import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.extra.jboard.JBoard;
 import es.ucm.fdi.tp.mvc.GameEvent;
-import es.ucm.fdi.tp.mvc.GameEvent.EventType;
 import es.ucm.fdi.tp.mvc.GameObserver;
-import es.ucm.fdi.tp.mvc.GameTable;
 
 public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction< S, A > > extends JBoard implements GameObserver<S, A>{
 
 	private static final long serialVersionUID = -2798902232928717390L;
 	
-	private ColorTableUI.ColorModel cm;
-	protected GUIController<S, A> ctrl;
-	protected S state;
+	public interface BoardListener< S extends GameState<S, A>, A extends GameAction<S, A>>{
+		public void makeManualMove(A a);
+	}
 	
-	public BoardUI(GUIController<S, A> ctrl, ColorTableUI.ColorModel cm, S state) {
+	private ColorTableUI.ColorModel cm;
+	private int id;
+	protected S state;
+	protected BoardListener<S, A> listener;
+	
+	public BoardUI(int id, ColorTableUI.ColorModel cm, S state, BoardListener<S, A> listener) {
 		this.cm = cm;
-		this.ctrl = ctrl;
 		this.state = state;
+		this.listener = listener;
+		this.id = id;
 		this.addMouseListener(new MouseListener(){
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -87,8 +90,24 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	
 	@Override
 	public void notifyEvent(GameEvent<S, A> e){
-		if(e.getType() == EventType.Change){
+		switch(e.getType()){
+		case Change:
+			setEnabled(e.getState().getTurn() == id);
 			repaint();
+			break;
+		case Error:
+			break;
+		case Info:
+			break;
+		case Start:
+			setEnabled(e.getState().getTurn() == id);
+			break;
+		case Stop:
+			setEnabled(false);
+			break;
+		default:
+			break;
+		
 		}
 	}
 }

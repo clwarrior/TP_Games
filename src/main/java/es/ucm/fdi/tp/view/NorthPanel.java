@@ -11,9 +11,11 @@ import javax.swing.JPanel;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
+import es.ucm.fdi.tp.mvc.GameEvent;
+import es.ucm.fdi.tp.mvc.GameObserver;
 import es.ucm.fdi.tp.view.PlayerUI.PlayerMode;
 
-public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel {
+public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel implements GameObserver<S, A>{
 
 	private static final long serialVersionUID = -8845489814772928993L;
 	
@@ -31,13 +33,14 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	private JButton bExit;
 	private JComboBox<String> mode;
 	private NorthPanelListener listener;
+	private int id;
 
-	public NorthPanel(NorthPanelListener listener) {
+	public NorthPanel(int id, NorthPanelListener listener) {
 
 		String modes[] = { "Manual", "Random", "Smart" };
 
 		this.listener = listener;
-
+		this.id = id;
 		this.bRandom = new JButton();
 		this.bSmart = new JButton();
 		this.bRestart = new JButton();
@@ -114,5 +117,17 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		b.setToolTipText(message);
 		b.setPreferredSize(new Dimension(45, 45));
 		return b;
+	}
+
+	@Override
+	public void notifyEvent(GameEvent<S, A> e) {
+		switch(e.getType()){
+		case Change:
+			bRandom.setEnabled(e.getState().getTurn() == id);
+			bSmart.setEnabled(e.getState().getTurn() == id);
+			break;
+		default:
+			break;
+		}
 	}
 }

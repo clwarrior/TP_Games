@@ -2,12 +2,13 @@ package es.ucm.fdi.tp.was;
 
 import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.*;
+import es.ucm.fdi.tp.view.BoardUI.BoardListener;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 
 public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 
-	public WasPlayerUI(GameTable<WasState, WasAction> game, String name) {
-		super(game, name);
+	public WasPlayerUI(GameTable<WasState, WasAction> game, String name, int id) {
+		super(game, name, id);
 	}
 
 	@Override
@@ -16,7 +17,7 @@ public class WasPlayerUI extends PlayerUI< WasState, WasAction >{
 	}
 
 	@Override
-	public BoardUI<WasState, WasAction> createBoard(ColorModel cm, WasState s) {
-		return new WasBoardUI(cm, s);
+	public BoardUI<WasState, WasAction> createBoard(int id, ColorModel cm, WasState s, BoardListener<WasState, WasAction> listener) {
+		return new WasBoardUI(id, cm, s, listener);
 	}
 }
