@@ -109,17 +109,9 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	@Override
 	public void notifyEvent(GameEvent<S, A> e) {
 		switch(e.getType()){
-		case Change:
-			break;
-		case Error:
-			break;
-		case Info:
-			break;
 		case Start:
 			clearMessages();
 			addMessage("The game has started.");
-			break;
-		case Stop:
 			break;
 		default:
 			break;

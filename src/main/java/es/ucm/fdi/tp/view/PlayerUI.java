@@ -10,6 +10,7 @@ import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
+import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
@@ -28,7 +29,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	private GameTable<S, A> game;
 	private RandomPlayer rPlayer;
 	private SmartPlayer sPlayer;
-	private int id;
+	protected int id;
 	private PlayerMode playerMode;
 	
 	private FrameUI jf;
@@ -43,7 +44,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		
 		this.id = id;
 		this.rPlayer = new RandomPlayer(name);
+		this.rPlayer.join(id);
 		this.sPlayer = new SmartPlayer(name, 5);
+		this.sPlayer.join(id);
 		this.playerMode = PlayerMode.Manual;
 		this.jf = createJFrame(game, name);
 		this.rPanel = new RightPanel<S, A>(state.getPlayerCount(), cm, new RightPanelListener(){
@@ -85,9 +88,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		});
 		this.board = createBoard(id, cm, state, new BoardListener<S, A>(){
 			public void makeManualMove(A a) {
-				if (id == game.getState().getTurn())
+				if (id == game.getState().getTurn()){
 					game.execute(a);
-				
+				}
 			}
 
 			@Override

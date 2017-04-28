@@ -19,22 +19,24 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
 		Coord click = new Coord(row, col);
 		if (state.getTurn() == state.WOLF) {
-			WasAction action = new WasAction(state.WOLF, state.getPieces()[state.WOLF], click);
-			if (state.isValid(action)) {
+			WasAction action = new WasAction(state.WOLF, click, state.getPieces()[state.WOLF]);
+			if (state.isValid(action) && id == state.getTurn()) {
 				listener.makeManualMove(action);
 				listener.sendMessage("You have moved from " + action.getIniPos() + " to " + action.getEndPos() + '.');
 				listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
+				selected = null;
 			}
 		} else {
 			if (state.at(row, col) == state.SHEEP) {
 				selected = click;
 				listener.sendMessage("Selected " + selected + ". Click cell to move or another piece to change selection.");
 			} else if (selected != null && state.at(selected.row, selected.col) == state.SHEEP) {
-				WasAction action = new WasAction(state.SHEEP, selected, click);
-				if (state.isValid(action)) {
+				WasAction action = new WasAction(state.SHEEP, click, selected);
+				if (state.isValid(action) && id == state.getTurn()) {
 					listener.makeManualMove(action);
 					listener.sendMessage("You have moved from " + action.getIniPos() + " to " + action.getEndPos() + '.');
 					listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
+					selected = null;
 				}
 			}
 		}

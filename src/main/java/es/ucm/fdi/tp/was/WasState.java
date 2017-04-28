@@ -96,16 +96,23 @@ public class WasState extends GameState<WasState, WasAction> {
      * @param action to check
      * @return valid
      */
-    public boolean isValid(WasAction action) {
+    public boolean inRange(WasAction action) {
     	boolean valid=false;
         if (isFinished()) {
             return false;
-        }
-        if (action.getRow()>=0 &&action.getCol()>=0 && action.getRow()<dim && action.getCol()<dim){
+        } else if (action.getRow()>=0 &&action.getCol()>=0 && action.getRow()<dim && action.getCol()<dim){
         	valid = at(action.getRow(), action.getCol()) == EMPTY;
         }
-
         return  valid;
+    }
+    
+    public boolean isValid(WasAction action){
+    	List<WasAction> valids = validActions(action.getPlayerNumber());
+    	boolean found=false;
+    	for(int i=0; i<valids.size() && !found ;++i){
+    		found= action.getCol()==valids.get(i).getCol() && action.getRow()==valids.get(i).getRow();
+    	}
+    	return found;
     }
     
     /**
@@ -124,7 +131,7 @@ public class WasState extends GameState<WasState, WasAction> {
         	for(int i = 0; i < 4;++i){
         		newPos = pieces[0].add(moves[i]);
         		WasAction action = new WasAction(playerNumber, newPos, pieces[0]);
-        		if (isValid(action)){
+        		if (inRange(action)){
         			valid.add(action);
         		}
         	}
@@ -133,7 +140,7 @@ public class WasState extends GameState<WasState, WasAction> {
         		for(int i = 0; i < 2;++i){
         			newPos = pieces[sheep].add(moves[i]);
         			WasAction action = new WasAction(playerNumber, newPos, pieces[sheep]);
-        			if (isValid(action)){
+        			if (inRange(action)){
         				valid.add(action);
         			}
         		}

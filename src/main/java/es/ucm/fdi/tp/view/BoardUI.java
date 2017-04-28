@@ -22,7 +22,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	}
 	
 	private ColorTableUI.ColorModel cm;
-	private int id;
+	protected int id;
 	protected S state;
 	protected BoardListener<S, A> listener;
 	
@@ -31,37 +31,6 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		this.state = state;
 		this.listener = listener;
 		this.id = id;
-		this.addMouseListener(new MouseListener(){
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int col = (e.getX() / _CELL_WIDTH);
-				int row = (e.getY() / _CELL_HEIGHT);
-
-				int mouseButton = 0;
-
-				if (SwingUtilities.isLeftMouseButton(e))
-					mouseButton = 1;
-				else if (SwingUtilities.isMiddleMouseButton(e))
-					mouseButton = 2;
-				else if (SwingUtilities.isRightMouseButton(e))
-					mouseButton = 3;
-
-				if (mouseButton == 0)
-					return;
-				BoardUI.this.mouseClicked(row, col, e.getClickCount(), mouseButton);
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-
-			@Override
-			public void mouseExited(MouseEvent e) {}
-
-			@Override
-			public void mousePressed(MouseEvent e) {}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {}});
 	}
 
 	@Override
@@ -94,7 +63,11 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		switch(e.getType()){
 		case Start:
 		case Change:
-			setEnabled(e.getState().getTurn() == id);
+			state = e.getState();
+			if(e.getState().getTurn() == id){
+				setEnabled(true);
+				listener.sendMessage("It's your turn.");
+			}
 			break;
 		case Stop:
 			setEnabled(false);

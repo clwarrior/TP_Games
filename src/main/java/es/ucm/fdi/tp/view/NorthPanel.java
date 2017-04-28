@@ -105,10 +105,12 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 			case "dice":
 				listener.makeRandomMove();
 				listener.sendMessage("You have requested a random move.");
+				listener.sendMessage("Turn of player " + (id + 1) % 2);
 				break;
 			case "nerd":
 				listener.makeSmartMove();
 				listener.sendMessage("You have requested a smart move.");
+				listener.sendMessage("Turn of player " + (id + 1) % 2);
 				break;
 			case "restart":
 				listener.restartGame();
