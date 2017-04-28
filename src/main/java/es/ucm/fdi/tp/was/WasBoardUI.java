@@ -22,14 +22,19 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 			WasAction action = new WasAction(state.WOLF, state.getPieces()[state.WOLF], click);
 			if (state.isValid(action)) {
 				listener.makeManualMove(action);
+				listener.sendMessage("You have moved from " + action.getIniPos() + " to " + action.getEndPos() + '.');
+				listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
 			}
 		} else {
 			if (state.at(row, col) == state.SHEEP) {
 				selected = click;
+				listener.sendMessage("Selected " + selected + ". Click cell to move or another piece to change selection.");
 			} else if (selected != null && state.at(selected.row, selected.col) == state.SHEEP) {
 				WasAction action = new WasAction(state.SHEEP, selected, click);
 				if (state.isValid(action)) {
 					listener.makeManualMove(action);
+					listener.sendMessage("You have moved from " + action.getIniPos() + " to " + action.getEndPos() + '.');
+					listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
 				}
 			}
 		}

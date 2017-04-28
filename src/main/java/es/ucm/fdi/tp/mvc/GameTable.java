@@ -11,7 +11,7 @@ import es.ucm.fdi.tp.mvc.GameEvent.EventType;
  */
 public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> implements GameObservable<S, A> {
 
-    private S initState; //QUE NO SE COPIEE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private S initState;
     private S actualState;
     private boolean finished;
     private boolean started;
@@ -28,13 +28,13 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         actualState = initState;
         started = true;
         finished = false;
-        GameEvent< S, A> start = new GameEvent< S, A >(EventType.Start, null, actualState, null, "The game has started");
+        GameEvent< S, A> start = new GameEvent< S, A >(EventType.Start, null, actualState, null, null);
         notifyObservers(start);
     }
     public void stop() {
     	if(!finished) {
     		finished = true;
-    		GameEvent< S, A > stop = new GameEvent<S, A>(EventType.Stop, null, null, null, "The game has stopped");
+    		GameEvent< S, A > stop = new GameEvent<S, A>(EventType.Stop, null, null, null, null);
     		notifyObservers(stop);
     	} else {
     		GameError error = new GameError("The game is already stopped");
@@ -54,9 +54,9 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         	try {
         		S newState = action.applyTo(actualState);
         		actualState = newState;
-        		GameEvent< S, A > event = new GameEvent< S, A >(EventType.Change, 
-        				action, actualState, null, "");
-        		notifyObservers(event);
+        		GameEvent< S, A > movement = new GameEvent< S, A >(EventType.Change, 
+        				action, actualState, null, null);
+        		notifyObservers(movement);
         	} catch (IllegalArgumentException e) {
         		GameError error = new GameError("The game is stopped or not started");
             	GameEvent< S, A > event = 

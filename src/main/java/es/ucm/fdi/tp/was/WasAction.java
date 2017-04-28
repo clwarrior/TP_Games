@@ -1,6 +1,7 @@
 package es.ucm.fdi.tp.was;
 
 import es.ucm.fdi.tp.base.model.GameAction;
+import es.ucm.fdi.tp.was.WasState.Coord;
 
 /**
  * An action for Wolf and Sheeps.
@@ -58,6 +59,14 @@ public class WasAction implements GameAction<WasState, WasAction> {
             next = new WasState(state, pieces, false, -1);
         }
         return next;
+    }
+    
+    public Coord getIniPos(){
+    	return iniPos;
+    }
+    
+    public Coord getEndPos(){
+    	return endPos;
     }
     
     public int getRow() {

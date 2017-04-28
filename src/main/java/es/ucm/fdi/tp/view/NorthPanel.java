@@ -25,8 +25,9 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		public void restartGame();
 		public void closeGame();
 		public void changePlayerMode(PlayerMode p);
+		public void sendMessage(String s);
 	}
-
+	
 	private JButton bRandom;
 	private JButton bSmart;
 	private JButton bRestart;
@@ -36,7 +37,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	private int id;
 
 	public NorthPanel(int id, NorthPanelListener listener) {
-
+		
 		String modes[] = { "Manual", "Random", "Smart" };
 
 		this.listener = listener;
@@ -81,6 +82,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 				break;
 			}
 			listener.changePlayerMode(pMode);
+			listener.sendMessage("You have changed to mode " + mode.getSelectedItem() + '.');
 		});
 
 		JLabel modeText = new JLabel("Player Mode: ");
@@ -102,9 +104,11 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 			switch (image) {
 			case "dice":
 				listener.makeRandomMove();
+				listener.sendMessage("You have requested a random move.");
 				break;
 			case "nerd":
 				listener.makeSmartMove();
+				listener.sendMessage("You have requested a smart move.");
 				break;
 			case "restart":
 				listener.restartGame();
@@ -122,6 +126,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	@Override
 	public void notifyEvent(GameEvent<S, A> e) {
 		switch(e.getType()){
+		case Start:
 		case Change:
 			bRandom.setEnabled(e.getState().getTurn() == id);
 			bSmart.setEnabled(e.getState().getTurn() == id);

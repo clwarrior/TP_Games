@@ -10,7 +10,6 @@ import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
-import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
@@ -38,13 +37,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	private BoardUI<S, A> board;
 	
 	public PlayerUI(GameTable<S, A> game, String name, int id){
-		game.start();
+
 		S state = game.getState();
 		ColorModel cm = new ColorTableUI().new ColorModel(state.getPlayerCount());
-		
-		game.addObserver(rPanel);
-		game.addObserver(nPanel);
-		game.addObserver(board);
 		
 		this.id = id;
 		this.rPlayer = new RandomPlayer(name);
@@ -84,6 +79,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			public void changePlayerMode(PlayerMode p) {
 				playerMode = p;
 			}
+			public void sendMessage(String message) {
+				rPanel.addMessage(message);
+			}
 		});
 		this.board = createBoard(id, cm, state, new BoardListener<S, A>(){
 			public void makeManualMove(A a) {
@@ -91,11 +89,22 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 					game.execute(a);
 				
 			}
+
+			@Override
+			public void sendMessage(String message) {
+				rPanel.addMessage(message);
+			}
 		});		
 		
 		jf.add(board, BorderLayout.CENTER);
 		jf.add(rPanel, BorderLayout.EAST);
-		jf.add(nPanel, BorderLayout.NORTH);		
+		jf.add(nPanel, BorderLayout.NORTH);	
+		jf.setVisible(true);
+		
+		
+		game.addObserver(rPanel);
+		game.addObserver(nPanel);
+		game.addObserver(board);
 	}
 	
 	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name);
@@ -109,16 +118,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		return playerMode;
 	}
 	
-	public void handleEvent(GameEvent<S, A> e){
-		
-	}
-	
 	public int getPlayerId(){
 		return id;
 	}
-
-
-		
 	
 	public static void main(String ... args) {
 		SwingUtilities.invokeLater(new Runnable() {

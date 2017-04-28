@@ -18,6 +18,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	
 	public interface BoardListener< S extends GameState<S, A>, A extends GameAction<S, A>>{
 		public void makeManualMove(A a);
+		public void sendMessage(String s);
 	}
 	
 	private ColorTableUI.ColorModel cm;
@@ -91,15 +92,8 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	@Override
 	public void notifyEvent(GameEvent<S, A> e){
 		switch(e.getType()){
-		case Change:
-			setEnabled(e.getState().getTurn() == id);
-			repaint();
-			break;
-		case Error:
-			break;
-		case Info:
-			break;
 		case Start:
+		case Change:
 			setEnabled(e.getState().getTurn() == id);
 			break;
 		case Stop:
@@ -107,7 +101,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 			break;
 		default:
 			break;
-		
 		}
+		repaint();
 	}
 }
