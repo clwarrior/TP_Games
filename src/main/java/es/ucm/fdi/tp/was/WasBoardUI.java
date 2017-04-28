@@ -87,9 +87,7 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 			g.drawOval(selected.col * _CELL_WIDTH + _SEPARATOR + 2, selected.row * _CELL_HEIGHT + _SEPARATOR
 					+ 2, _CELL_WIDTH - 2 * _SEPARATOR - 4, _CELL_HEIGHT - 2
 					* _SEPARATOR - 4);
-			
-			
-			
+		
 			g.setColor(cm.at(state.getTurn()));
 			g.drawRect(selected.row + _SEPARATOR + 2, selected.col + _SEPARATOR
 					+ 2, _CELL_WIDTH - 2 * _SEPARATOR - 4, _CELL_HEIGHT - 2
