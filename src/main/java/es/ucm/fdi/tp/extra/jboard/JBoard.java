@@ -17,7 +17,7 @@ public abstract class JBoard extends JComponent {
 
 	public int _CELL_HEIGHT = 50;
 	public int _CELL_WIDTH = 50;
-	private int _SEPARATOR = -2;
+	protected int _SEPARATOR = -2;
 
 	public enum Shape {
 		CIRCLE, RECTANGLE
@@ -95,7 +95,10 @@ public abstract class JBoard extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		fillBoard(g);
+		paintSelected(g);
 	}
+
+	public abstract void paintSelected(Graphics g);
 
 	private void fillBoard(Graphics g) {
 		int numCols = getNumCols();

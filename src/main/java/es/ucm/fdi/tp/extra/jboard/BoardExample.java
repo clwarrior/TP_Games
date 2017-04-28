@@ -2,6 +2,7 @@ package es.ucm.fdi.tp.extra.jboard;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -80,6 +81,9 @@ public class BoardExample extends JFrame {
 				return 1; // put to 0 if you don't want a separator between
 							// cells
 			}
+
+			@Override
+			public void paintSelected(Graphics g) {}
 		};
 
 		mainPanel.add(boardComp, BorderLayout.CENTER);

@@ -1,10 +1,7 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.SwingUtilities;
+import java.awt.Graphics;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
@@ -21,7 +18,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		public void sendMessage(String s);
 	}
 	
-	private ColorTableUI.ColorModel cm;
+	protected ColorTableUI.ColorModel cm;
 	protected int id;
 	protected S state;
 	protected BoardListener<S, A> listener;
@@ -33,6 +30,8 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		this.id = id;
 	}
 
+	public abstract void paintSelected(Graphics g);
+	
 	@Override
 	protected void keyTyped(int keyCode) {}
 
@@ -64,7 +63,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		case Start:
 		case Change:
 			state = e.getState();
-			if(e.getState().getTurn() == id){
+			if(e.getState().getTurn() == id && !e.getState().isFinished()){
 				setEnabled(true);
 				listener.sendMessage("It's your turn.");
 			}
@@ -77,4 +76,6 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		}
 		repaint();
 	}
+
+	public abstract void nullSelected();
 }

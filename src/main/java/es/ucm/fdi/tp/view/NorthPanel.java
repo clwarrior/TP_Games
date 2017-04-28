@@ -104,13 +104,9 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 			switch (image) {
 			case "dice":
 				listener.makeRandomMove();
-				listener.sendMessage("You have requested a random move.");
-				listener.sendMessage("Turn of player " + (id + 1) % 2);
 				break;
 			case "nerd":
 				listener.makeSmartMove();
-				listener.sendMessage("You have requested a smart move.");
-				listener.sendMessage("Turn of player " + (id + 1) % 2);
 				break;
 			case "restart":
 				listener.restartGame();
@@ -130,8 +126,8 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		switch(e.getType()){
 		case Start:
 		case Change:
-			bRandom.setEnabled(e.getState().getTurn() == id);
-			bSmart.setEnabled(e.getState().getTurn() == id);
+			bRandom.setEnabled(e.getState().getTurn() == id && !e.getState().isFinished());
+			bSmart.setEnabled(e.getState().getTurn() == id &&  !e.getState().isFinished());
 			break;
 		default:
 			break;

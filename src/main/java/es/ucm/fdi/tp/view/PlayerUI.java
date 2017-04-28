@@ -10,7 +10,6 @@ import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.base.player.SmartPlayer;
-import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
@@ -43,6 +42,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		ColorModel cm = new ColorTableUI().new ColorModel(state.getPlayerCount());
 		
 		this.id = id;
+		this.game = game;
 		this.rPlayer = new RandomPlayer(name);
 		this.rPlayer.join(id);
 		this.sPlayer = new SmartPlayer(name, 5);
@@ -53,18 +53,16 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			public void changeColor(){
 				jf.repaint();
 			}
-		});
+		}, id);
 		this.nPanel = new NorthPanel<S, A>(id, new NorthPanelListener(){
 			public void makeRandomMove() {
 				if (id == game.getState().getTurn()) {
-					A a = rPlayer.requestAction(game.getState());
-					game.execute(a);
+					randomMove();
 				}
 			}
 			public void makeSmartMove() {
 				if (id == game.getState().getTurn()) {
-					A a = sPlayer.requestAction(game.getState());
-					game.execute(a);
+					smartMove();
 				}
 			}
 			public void restartGame() {
@@ -81,6 +79,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			}
 			public void changePlayerMode(PlayerMode p) {
 				playerMode = p;
+				autoMove();
 			}
 			public void sendMessage(String message) {
 				rPanel.addMessage(message);
@@ -108,6 +107,21 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		game.addObserver(rPanel);
 		game.addObserver(nPanel);
 		game.addObserver(board);
+		game.addObserver((e) -> autoMove());
+	}
+	
+	private void autoMove(){
+		if(game != null && game.getState().getTurn() == id && !game.getState().isFinished()){
+			switch(playerMode){
+			case Random:
+				randomMove();
+				break;
+			case Smart:
+				smartMove();
+				break;
+				default: break;
+			}
+		}
 	}
 	
 	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name);
@@ -116,13 +130,33 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	public void stopGame() {
 		game.stop();
 	}
-
+	
 	public PlayerMode getPlayerMode(){
 		return playerMode;
 	}
 	
 	public int getPlayerId(){
 		return id;
+	}
+	
+	public void randomMove(){
+		A a = rPlayer.requestAction(game.getState());
+		rPanel.addMessage("You have requested a random move.");
+		board.nullSelected();
+		SwingUtilities.invokeLater(()->{
+			game.execute(a);
+		});
+		rPanel.addMessage("Turn of player " + (id + 1) % 2);
+	}
+	
+	public void smartMove(){
+		A a = sPlayer.requestAction(game.getState());
+		rPanel.addMessage("You have requested a smart move.");
+		board.nullSelected();
+		SwingUtilities.invokeLater(()->{
+			game.execute(a);
+		});
+		rPanel.addMessage("Turn of player " + (id + 1) % 2);
 	}
 	
 	public static void main(String ... args) {
