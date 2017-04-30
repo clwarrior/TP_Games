@@ -80,6 +80,11 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         	}
         }
     }
+    
+    public boolean isStopped() {
+    	return finished;
+    }
+   
     public S getState() {
 		return actualState;
     }
