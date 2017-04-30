@@ -2,6 +2,7 @@ package es.ucm.fdi.tp.view;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.logging.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,10 +16,22 @@ import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameObserver;
 import es.ucm.fdi.tp.view.PlayerUI.PlayerMode;
 
+/**
+ * North panel of the window. Contains four buttons and one comboBox to change the mode
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 1 (03/05/2017)
+ * @param <S> GameState of the game played
+ * @param <A> GameAction of the game played
+ */
 public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel implements GameObserver<S, A>{
 
 	private static final long serialVersionUID = -8845489814772928993L;
 	
+	/**
+	 * Listener to the actions made in this panel
+	 * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+	 * @version 1 (03/05/2017)
+	 */
 	public interface NorthPanelListener{
 		public void makeRandomMove();
 		public void makeSmartMove();
@@ -28,6 +41,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		public void sendMessage(String s);
 	}
 	
+	private Logger log;
 	private JButton bRandom;
 	private JButton bSmart;
 	private JButton bRestart;
@@ -53,6 +67,9 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 
 	}
 
+	/**
+	 * Initializes the north panel with the default values
+	 */
 	private void initGUI() {
 		// Buttons
 		bRandom = createButton("dice", "Make random movement");
@@ -81,6 +98,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 				pMode = PlayerUI.PlayerMode.Smart;
 				break;
 			}
+			//log.fine("Changed mode to " + mode.getSelectedItem() + '.');
 			listener.changePlayerMode(pMode);
 			listener.sendMessage("You have changed to mode " + mode.getSelectedItem() + '.');
 		});
@@ -97,21 +115,31 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		this.add(plMode);
 	}
 
+	/**
+	 * Creates and returns a JButton with the given icon and the given tip text
+	 * @param image to be set as the icon of the button
+	 * @param message to be set as the tip text of the button
+	 * @return JButton with the requested characteristics
+	 */
 	private JButton createButton(String image, String message) {
 		JButton b = new JButton();
 		b.setIcon(new ImageIcon("src/main/resources/" + image + ".png"));
 		b.addActionListener((e) -> {
 			switch (image) {
 			case "dice":
+				//log.fine("Clicked random move");
 				listener.makeRandomMove();
 				break;
 			case "nerd":
+				//log.fine("Clicked smart move");
 				listener.makeSmartMove();
 				break;
 			case "restart":
+				//log.fine("Clicked restart");
 				listener.restartGame();
 				break;
 			case "exit":
+				//log.fine("Clicked exit.");
 				listener.closeGame();
 				break;
 			}
@@ -121,13 +149,20 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		return b;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void notifyEvent(GameEvent<S, A> e) {
 		switch(e.getType()){
 		case Start:
 		case Change:
-			bRandom.setEnabled(e.getState().getTurn() == id && !e.getState().isFinished());
-			bSmart.setEnabled(e.getState().getTurn() == id &&  !e.getState().isFinished());
+			bRandom.setEnabled(e.getState().getTurn() == id);
+			bSmart.setEnabled(e.getState().getTurn() == id );
+			break;
+		case Stop:
+			bRandom.setEnabled(false);
+			bSmart.setEnabled(false);
 			break;
 		default:
 			break;

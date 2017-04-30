@@ -16,7 +16,6 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	public interface BoardListener< S extends GameState<S, A>, A extends GameAction<S, A>>{
 		public void makeManualMove(A a);
 		public void sendMessage(String s);
-		public void stopGame();
 	}
 	
 	protected ColorTableUI.ColorModel cm;
@@ -68,8 +67,6 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 				setEnabled(true);
 				listener.sendMessage("It's your turn.");
 			}
-			if(e.getState().isFinished())
-				listener.stopGame();
 			break;
 		case Stop:
 			nullSelected();

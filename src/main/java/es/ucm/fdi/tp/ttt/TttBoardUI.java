@@ -20,9 +20,9 @@ public class TttBoardUI extends BoardUI<TttState, TttAction> {
 		if(state.getTurn() == id && !state.isFinished()) {
 			TttAction action = new TttAction(state.getTurn(), row, col);
 			if(state.isValid(action)) {
-				listener.makeManualMove(action);
 				listener.sendMessage("You have chosen the cell (" + row + ',' + col + ").");
 				listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
+				listener.makeManualMove(action);
 			}
 		}
 	}

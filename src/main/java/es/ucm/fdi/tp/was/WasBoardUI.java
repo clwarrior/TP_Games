@@ -2,7 +2,6 @@ package es.ucm.fdi.tp.was;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.List;
 
 import es.ucm.fdi.tp.view.BoardUI;
@@ -26,9 +25,9 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 		if (state.getTurn() == state.WOLF && id == state.getTurn() && !state.isFinished()) {
 			WasAction action = new WasAction(state.WOLF, click, state.getPieces()[state.WOLF]);
 			if (state.isValid(action)) {
-				listener.makeManualMove(action);
 				listener.sendMessage("You have moved from " + action.getIniPos() + " to " + action.getEndPos() + '.');
 				listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
+				listener.makeManualMove(action);
 				selected = null;
 			}
 		} else if (!state.isFinished() && id == state.getTurn()){
@@ -40,10 +39,10 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 			} else if (selected != null && state.at(selected.row, selected.col) == state.SHEEP) {
 				WasAction action = new WasAction(state.SHEEP, click, selected);
 				if (state.isValid(action)) {
-					listener.makeManualMove(action);
 					listener.sendMessage(
 							"You have moved from " + action.getIniPos() + " to " + action.getEndPos() + '.');
 					listener.sendMessage("Turn of player " + (action.getPlayerNumber() + 1) % 2 + '.');
+					listener.makeManualMove(action);
 					selected = null;
 				}
 			}
@@ -76,10 +75,11 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 	public void paintSelected(Graphics g) {
 		if (state.getTurn() == state.SHEEP && id == state.SHEEP && selected != null) {
 			g.setColor(inverseColor(cm.at(state.getTurn())));
-			for (int i = 2; i <= 4; ++i) {
-				g.drawOval(selected.col * _CELL_WIDTH + _SEPARATOR + i, selected.row * _CELL_HEIGHT + _SEPARATOR + i,
-						_CELL_WIDTH - i * _SEPARATOR - 4, _CELL_HEIGHT - i * _SEPARATOR - 4);
-			}
+			g.fillOval(selected.col * _CELL_WIDTH + _SEPARATOR + 2, selected.row * _CELL_HEIGHT + _SEPARATOR + 2,
+					_CELL_WIDTH - 2 * _SEPARATOR - 4, _CELL_HEIGHT - 2 * _SEPARATOR - 4);
+			g.setColor(cm.at(state.getTurn()));
+			g.fillOval(selected.col * _CELL_WIDTH + _SEPARATOR + 4, selected.row * _CELL_HEIGHT + _SEPARATOR + 4,
+					_CELL_WIDTH - 4 * _SEPARATOR - 4, _CELL_HEIGHT - 4 * _SEPARATOR - 4);
 
 			List<WasAction> possible = state.validActions(state.getTurn(), selected);
 			g.setColor(cm.at(state.getTurn()));

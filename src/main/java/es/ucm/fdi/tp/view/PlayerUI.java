@@ -15,9 +15,6 @@ import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
 import es.ucm.fdi.tp.view.RightPanel.RightPanelListener;
 import es.ucm.fdi.tp.view.BoardUI.BoardListener;
-import es.ucm.fdi.tp.was.WasAction;
-import es.ucm.fdi.tp.was.WasPlayerUI;
-import es.ucm.fdi.tp.was.WasState;
 
 public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S, A>>{
 	
@@ -57,11 +54,13 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		this.nPanel = new NorthPanel<S, A>(id, new NorthPanelListener(){
 			public void makeRandomMove() {
 				if (id == game.getState().getTurn()) {
+					rPanel.addMessage("You have requested a random move.");
 					randomMove();
 				}
 			}
 			public void makeSmartMove() {
 				if (id == game.getState().getTurn()) {
+					rPanel.addMessage("You have requested a smart move.");
 					smartMove();
 				}
 			}
@@ -96,12 +95,6 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			@Override
 			public void sendMessage(String message) {
 				rPanel.addMessage(message);
-			}
-			
-			@Override
-			public void stopGame() {
-				if(!game.isStopped())
-					game.stop();
 			}
 		});		
 		
@@ -144,7 +137,6 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	
 	public void randomMove(){
 		A a = rPlayer.requestAction(game.getState());
-		rPanel.addMessage("You have requested a random move.");
 		board.nullSelected();
 		SwingUtilities.invokeLater(()->{
 			game.execute(a);
@@ -154,20 +146,10 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	
 	public void smartMove(){
 		A a = sPlayer.requestAction(game.getState());
-		rPanel.addMessage("You have requested a smart move.");
 		board.nullSelected();
 		SwingUtilities.invokeLater(()->{
 			game.execute(a);
 		});
 		rPanel.addMessage("Turn of player " + (id + 1) % 2);
-	}
-	
-	public static void main(String ... args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				WasState ws = new WasState();
-				new WasPlayerUI(new GameTable<WasState, WasAction>(ws), "Pepe", 0);
-			}
-		});
 	}
 }

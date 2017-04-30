@@ -21,24 +21,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
  * Main class of the application. It's the launcher of the game.
- * 
  * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
- * @version 1 (13/03/2017)
+ * @version 2 (03/05/2017)
  */
 public class Main {
 
+	/**
+	 * Constant strings which contains the error messages
+	 */
 	final static String NotArguments = "Error: number of arguments not suitable";
 	final static String WrongGame = "Error: game not available";
 	final static String WrongPlayersNumber = "Error: number of players not suitable";
-	final static String WrongMatches = "Error: number of matches not suitable";
 
 	/**
-	 * Array with names to be chosen for the not automatic players.
+	 * Array with names to be chosen for the players.
 	 */
 	private static String[] people = new String[] { "Ana", "Berto", "Carlos",
 			"Daniela", "Evaristo", "Fátima", "Gloria", "Hilario", "Isabel",
@@ -63,6 +65,11 @@ public class Main {
 		return elegidos;
 	}
 
+	/**
+	 * Method which starts and returns a new GameTable of the type given
+	 * @param gType type of the game
+	 * @return GameTable of the type given
+	 */
 	private static GameTable<?, ?> createGame(String gType) {
 		switch (gType) {
 		case "ttt":
@@ -73,17 +80,22 @@ public class Main {
 		return null;
 	}
 
+	/**
+	 * Initiates a game in console mode with players in the given modes
+	 * @param game given to run
+	 * @param playerModes of the players who are going to play
+	 */
 	private static <S extends GameState<S, A>, A extends GameAction<S, A>> void startConsoleMode(
 			GameTable<S, A> game, String playerModes[]) {
 		List<GamePlayer> players = new ArrayList<GamePlayer>();
 		List<String> names = notRepNames(playerModes.length);
 		for (int i = 0; i < playerModes.length; ++i) {
-			if (playerModes[i].startsWith("manual")) {
+			if (playerModes[i].equals("manual")) {
 				players.add(new ConsolePlayer(names.get(i), new Scanner(
 						System.in)));
-			} else if (playerModes[i].startsWith("rand")) {
+			} else if (playerModes[i].equals("rand")) {
 				players.add(new RandomPlayer("Random" + names.get(i)));
-			} else if (playerModes[i].startsWith("smart")) {
+			} else if (playerModes[i].equals("smart")) {
 				players.add(new SmartPlayer("AI" + names.get(i), 20));
 			} else {
 				throw new IllegalArgumentException("player \"" + playerModes[i]
@@ -95,7 +107,12 @@ public class Main {
 		ctrl.run();
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Initiates a game in gui mode with the players in the given modes
+	 * @param gType type of the game which is going to be run
+	 * @param game given to run
+	 * @param playerModes of the players who are going to play
+	 */
 	private static <S extends GameState<S, A>, A extends GameAction<S, A>> void startGUIMode(
 			String gType, GameTable<S, A> game, String playerModes[]) {
 
@@ -104,6 +121,7 @@ public class Main {
 
 		SwingUtilities.invokeLater(new Runnable() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				if (gType.equals("ttt")) {
@@ -128,6 +146,9 @@ public class Main {
 
 	}
 
+	/**
+	 * Shows an error message with the arguments through the console
+	 */
 	public static void usage() {
 		System.out.println(NotArguments);
 	}
@@ -138,18 +159,21 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String... args) {
+		
+		setupLogging(Level.SEVERE);
+		
 		if (args.length < 2) {
 			usage();
 			System.exit(1);
 		}
 		GameTable<?, ?> game = createGame(args[0]);
 		if (game == null) {
-			System.err.println("Invalid game");
+			System.err.println(WrongGame);
 			System.exit(1);
 		}
 		String[] playerModes = Arrays.copyOfRange(args, 2, args.length);
 		if (game.getState().getPlayerCount() != playerModes.length) {
-			System.err.println("Invalid number of players");
+			System.err.println(WrongPlayersNumber);
 			System.exit(1);
 		}
 		switch (args[1]) {
@@ -165,4 +189,10 @@ public class Main {
 			System.exit(1);
 		}
 	}
+	
+	public static void setupLogging(Level level) {
+
+        Logger log = Logger.getLogger("");
+        log.setLevel(level);
+    }
 }

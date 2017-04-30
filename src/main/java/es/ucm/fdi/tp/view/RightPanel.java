@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,10 +26,16 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 
 	private static final long serialVersionUID = 5798952159009121986L;
 
+	/**
+	 * Listener to the actions made in this panel
+	 * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+	 * @version 1 (03/05/2017)
+	 */
 	public interface RightPanelListener {
 		public void changeColor();
 	}
 
+	private Logger log;
 	private int id;
 	private JTextArea text;
 	private ColorTableUI ct;
@@ -47,6 +55,9 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 
 	}
 
+	/**
+	 * Initializes the north panel with the default values
+	 */
 	private void initGUI() {
 		Border b = BorderFactory.createLineBorder(Color.BLACK, 2, false);
 
@@ -89,6 +100,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 				int col = colors.columnAtPoint(evt.getPoint());
 				if (row >= 0 && col >= 0) {
 					ct.changeColor(row);
+					//log.fine("Clicked in the color table");
 					listener.changeColor();
 				}
 			}
@@ -105,14 +117,24 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 		this.add(colorTable, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Adds a message to the status messages box
+	 * @param message
+	 */
 	public void addMessage(String message) {
 		text.append(message + '\n');
 	}
 
+	/**
+	 * Clears the status messages box
+	 */
 	public void clearMessages() {
 		text.setText("");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void notifyEvent(GameEvent<S, A> e) {
 		switch (e.getType()) {
@@ -120,15 +142,17 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 			clearMessages();
 			addMessage("The game has started.");
 			break;
-		case Change:
-			if (e.getState().isFinished()) {
+		case Stop:
 				addMessage("The game has ended.");
-				if (e.getState().getWinner() == id)
+				int winner = e.getState().getWinner();
+				if (winner == id)
 					addMessage("Congratulations. You have won.");
-				else
+				else if(winner != -1)
 					addMessage("The winner is player "
 							+ e.getState().getWinner() + '.');
-			}
+				else
+					addMessage("It's a draw!");
+				break;
 		default:
 			break;
 		}

@@ -8,10 +8,21 @@ import javax.swing.table.AbstractTableModel;
 
 import es.ucm.fdi.tp.extra.jcolor.ColorChooser;
 
+
+/**
+ * Colors table to change the color of the pieces
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 1 (03/05/2017)
+ */
 public class ColorTableUI extends AbstractTableModel {
 
 	private static final long serialVersionUID = -1501410827853002864L;
 
+	/**
+	 * Colors model to build the color table
+	 * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+	 * @version 1 (03/05/2017)
+	 */
 	public class ColorModel {
 
 		Color[] colors;
@@ -27,10 +38,14 @@ public class ColorTableUI extends AbstractTableModel {
 			return colors[num];
 		}
 
-		public void put(int num, Color color){
+		public void set(int num, Color color){
 			colors[num] = color;
 		}
 		
+		/**
+		 * Generates and returns a random color
+		 * @return random color
+		 */
 		private Color randColor() {
 			int red, green, blue;
 			Random aux = new Random();
@@ -59,11 +74,17 @@ public class ColorTableUI extends AbstractTableModel {
 		this.colorChooser = new ColorChooser(new JFrame(), "Choose a color", cm.at(0));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getColumnCount() {
 		return numCols;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getColumnName(int columnIndex) {
 		if (columnIndex < 0 || columnIndex >= numCols)
@@ -72,11 +93,17 @@ public class ColorTableUI extends AbstractTableModel {
 			return columnNames[columnIndex];
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getRowCount() {
 		return numRows;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if (rowIndex < 0 || rowIndex >= numRows || columnIndex < 0 || columnIndex >= numCols)
@@ -85,6 +112,9 @@ public class ColorTableUI extends AbstractTableModel {
 			return table[rowIndex][columnIndex];
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		if (rowIndex < 0 || rowIndex >= numRows || columnIndex < 0 || columnIndex >= numCols)
@@ -93,6 +123,9 @@ public class ColorTableUI extends AbstractTableModel {
 			return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		if (rowIndex < 0 || rowIndex >= numRows || columnIndex < 0 || columnIndex >= numCols)
@@ -101,6 +134,9 @@ public class ColorTableUI extends AbstractTableModel {
 			table[rowIndex][columnIndex] = (String)aValue;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<?> getColumnClass(int columnIndex){
 		if (columnIndex < 0 || columnIndex >= numCols)
@@ -109,11 +145,15 @@ public class ColorTableUI extends AbstractTableModel {
 			return String.class;
 	}	
 	
+	/**
+	 * Open the color chooser window to change the color of the given row
+	 * @param row which color is going to be changed
+	 */
 	public void changeColor(int row) {
 		colorChooser.setSelectedColorDialog(cm.at(row));
 		colorChooser.openDialog();
 		if (colorChooser.getColor() != null) {
-			cm.put(row, colorChooser.getColor());
+			cm.set(row, colorChooser.getColor());
 		}
 	}
 }
