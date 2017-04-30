@@ -32,7 +32,7 @@ public class ConsoleController<S extends GameState<S, A>, A extends GameAction<S
 		}
 		S currentState = game.getState();
 		GameEvent<S, A> initBoard = new GameEvent<S,A>(EventType.Start, null, null, null, toString(currentState));
-		
+		game.notifyObservers(initBoard);
 		while (!currentState.isFinished()) {
 			// request move
 			GameEvent<S, A> turn = new GameEvent<S,A>(EventType.Info, null, null, null, "It's " + 

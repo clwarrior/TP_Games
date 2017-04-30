@@ -95,7 +95,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 		});
 		colors.setToolTipText("Click a row to change the player color");
 		JScrollPane colorTable = new JScrollPane(colors);
-		colorTable.setPreferredSize(new Dimension(200, 200));
+		colorTable.setPreferredSize(new Dimension(200, 100));
 		colorTable.setBorder(BorderFactory.createTitledBorder(b,
 				"Player Information", TitledBorder.CENTER, TitledBorder.TOP));
 

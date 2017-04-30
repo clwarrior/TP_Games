@@ -13,7 +13,8 @@ public class ConsoleView<S extends GameState<S, A>, A extends GameAction<S, A>> 
 	}
 	
 	public void notifyEvent(GameEvent<S, A> e) {
-		System.out.println(e);
+		if(e.toString() != null)
+			System.out.println(e);
 	}
 
 }

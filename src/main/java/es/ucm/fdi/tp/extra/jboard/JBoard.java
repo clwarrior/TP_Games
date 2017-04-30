@@ -2,7 +2,7 @@ package es.ucm.fdi.tp.extra.jboard;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -92,15 +92,15 @@ public abstract class JBoard extends JComponent {
 		repaint();
 	}
 
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics2D g) {
 		super.paintComponent(g);
 		fillBoard(g);
 		paintSelected(g);
 	}
 
-	public abstract void paintSelected(Graphics g);
+	public abstract void paintSelected(Graphics2D g);
 
-	private void fillBoard(Graphics g) {
+	private void fillBoard(Graphics2D g) {
 		int numCols = getNumCols();
 		int numRows = getNumRows();
 
@@ -118,7 +118,7 @@ public abstract class JBoard extends JComponent {
 				drawCell(i, j, g);
 	}
 
-	private void drawCell(int row, int col, Graphics g) {
+	private void drawCell(int row, int col, Graphics2D g) {
 		int x = col * _CELL_WIDTH;
 		int y = row * _CELL_HEIGHT;
 

@@ -70,6 +70,9 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
 		return actualState;
     }
 
+    public boolean isStopped() {
+    	return finished;
+    }
     public void addObserver(GameObserver<S, A> o) {
         obs.add(o);
     }

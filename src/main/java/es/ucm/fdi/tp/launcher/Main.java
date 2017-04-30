@@ -91,7 +91,8 @@ public class Main {
 			}
 		}
 		new ConsoleView<S, A>(game);
-		new ConsoleController<S, A>(players, game);
+		ConsoleController<S, A> ctrl = new ConsoleController<S, A>(players, game);
+		ctrl.run();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -105,7 +106,7 @@ public class Main {
 
 			@Override
 			public void run() {
-				if (gType == "ttt") {
+				if (gType.equals("ttt")) {
 					for (int i = 0; i < playerModes.length; ++i) {
 						players.add(new ConsolePlayer(names.get(i),
 								new Scanner(System.in)));
@@ -113,7 +114,7 @@ public class Main {
 								players.get(i).getName(), i);
 					}
 					game.start();
-				} else {
+				} else if (gType.equals("was")){
 					for (int i = 0; i < playerModes.length; ++i) {
 						players.add(new ConsolePlayer(names.get(i),
 								new Scanner(System.in)));

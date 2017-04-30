@@ -66,7 +66,8 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 				}
 			}
 			public void restartGame() {
-				game.stop();
+				if(!game.isStopped())
+					game.stop();
 				game.start();
 			}
 			public void closeGame(){
@@ -95,6 +96,12 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			@Override
 			public void sendMessage(String message) {
 				rPanel.addMessage(message);
+			}
+			
+			@Override
+			public void stopGame() {
+				if(!game.isStopped())
+					game.stop();
 			}
 		});		
 		
@@ -126,10 +133,6 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	
 	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name);
 	public abstract BoardUI<S, A> createBoard(int id, ColorModel cm, S s, BoardListener<S, A> listener);
-
-	public void stopGame() {
-		game.stop();
-	}
 	
 	public PlayerMode getPlayerMode(){
 		return playerMode;

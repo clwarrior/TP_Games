@@ -42,6 +42,10 @@ public class WasState extends GameState<WasState, WasAction> {
 		public Coord copy() {
 			return new Coord(row, col);
 		}
+
+		public boolean equal(Coord other) {
+			return col == other.col && row == other.row;
+		}
 	}
 
 	private static final long serialVersionUID = -6066312347935012935L;
@@ -117,12 +121,11 @@ public class WasState extends GameState<WasState, WasAction> {
 	}
 
 	public boolean isValid(WasAction action) {
-		List<WasAction> valids = validActions(action.getPlayerNumber());
+		List<WasAction> valids = validActions(action.getPlayerNumber(), action.getIniPos());
 		boolean found = false;
 		for (int i = 0; i < valids.size() && !found; ++i) {
-			found = action.getCol() == valids.get(i).getCol()
-					&& action.getRow() == valids.get(i).getRow() && action.getIniPos().col == valids.get(i).getIniPos().col
-					&& action.getIniPos().row == valids.get(i).getIniPos().row;
+			found = action.getIniPos().equal(valids.get(i).getIniPos()) && 
+					action.getEndPos().equal(valids.get(i).getEndPos());
 		}
 		return found;
 	}
@@ -162,6 +165,25 @@ public class WasState extends GameState<WasState, WasAction> {
 			}
 		}
 		return valid;
+	}
+	
+	public List<WasAction> validActions(int playerNumber, Coord piece){
+		List<WasAction> actions = new ArrayList<>();
+		for(int i = 0; i < 2; ++i) {
+			Coord newPos = piece.add(moves[i]);
+			WasAction action = new WasAction(playerNumber, newPos, piece);
+			if(inRange(action))
+				actions.add(action);
+		}
+		if(playerNumber == WOLF) {
+			for(int i = 2; i < 4; ++i) {
+				Coord newPos = piece.add(moves[i]);
+				WasAction action = new WasAction(playerNumber, newPos, piece);
+				if(inRange(action))
+					actions.add(action);
+			}
+		}
+		return actions;
 	}
 
 	/**
