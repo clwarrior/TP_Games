@@ -1,7 +1,6 @@
 package es.ucm.fdi.tp.ttt;
 
-import java.awt.Graphics2D;
-
+import java.awt.Graphics;
 import es.ucm.fdi.tp.view.BoardUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 
@@ -14,7 +13,7 @@ public class TttBoardUI extends BoardUI<TttState, TttAction> {
 	}
 
 	@Override
-	public void paintSelected(Graphics2D g) {}
+	public void paintSelected(Graphics g) {}
 
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {

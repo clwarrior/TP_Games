@@ -2,7 +2,6 @@ package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
@@ -32,7 +31,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		this.id = id;
 	}
 
-	public abstract void paintSelected(Graphics2D g);
+	public abstract void paintSelected(Graphics g);
 	
 	@Override
 	protected void keyTyped(int keyCode) {}

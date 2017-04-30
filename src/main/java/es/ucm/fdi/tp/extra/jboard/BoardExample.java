@@ -3,7 +3,6 @@ package es.ucm.fdi.tp.extra.jboard;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -84,7 +83,7 @@ public class BoardExample extends JFrame {
 			}
 
 			@Override
-			public void paintSelected(Graphics2D g) {}
+			public void paintSelected(Graphics g) {}
 		};
 
 		mainPanel.add(boardComp, BorderLayout.CENTER);

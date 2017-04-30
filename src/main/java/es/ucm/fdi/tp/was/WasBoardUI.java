@@ -73,7 +73,7 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 	}
 
 	@Override
-	public void paintSelected(Graphics2D g) {
+	public void paintSelected(Graphics g) {
 		if (state.getTurn() == state.SHEEP && id == state.SHEEP && selected != null) {
 			g.setColor(inverseColor(cm.at(state.getTurn())));
 			for (int i = 2; i <= 4; ++i) {
