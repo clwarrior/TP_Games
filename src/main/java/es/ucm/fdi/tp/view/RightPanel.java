@@ -45,6 +45,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	public RightPanel(int numPlayers, ColorModel cm,
 			RightPanelListener listener, int id) {
 
+		this.log = Logger.getLogger("log");
 		this.id = id;
 		this.listener = listener;
 		this.cm = cm;
@@ -100,7 +101,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 				int col = colors.columnAtPoint(evt.getPoint());
 				if (row >= 0 && col >= 0) {
 					ct.changeColor(row);
-					//log.fine("Clicked in the color table");
+					log.info("Player " + id + " clicked in the color table");
 					listener.changeColor();
 				}
 			}
@@ -122,6 +123,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	 * @param message
 	 */
 	public void addMessage(String message) {
+		log.info("Sent message: \"" + message + "\" to player " + id );
 		text.append(message + '\n');
 	}
 
@@ -129,6 +131,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	 * Clears the status messages box
 	 */
 	public void clearMessages() {
+		log.info("Player's " + id + " messages cleared");
 		text.setText("");
 	}
 

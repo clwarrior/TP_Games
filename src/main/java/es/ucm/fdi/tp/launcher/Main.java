@@ -160,7 +160,7 @@ public class Main {
 	 */
 	public static void main(String... args) {
 		
-		setupLogging(Level.SEVERE);
+		Log.setupLogging(Level.INFO);
 		
 		if (args.length < 2) {
 			usage();
@@ -189,10 +189,4 @@ public class Main {
 			System.exit(1);
 		}
 	}
-	
-	public static void setupLogging(Level level) {
-
-        Logger log = Logger.getLogger("");
-        log.setLevel(level);
-    }
 }

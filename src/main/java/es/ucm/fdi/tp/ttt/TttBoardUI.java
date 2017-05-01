@@ -32,6 +32,7 @@ public class TttBoardUI extends BoardUI<TttState, TttAction> {
 	 */
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
+		log.info("Player " + id + " clicked on cell (" + row + ',' + col + ")");
 		if(state.getTurn() == id && !state.isFinished()) {
 			TttAction action = new TttAction(state.getTurn(), row, col);
 			if(state.isValid(action)) {

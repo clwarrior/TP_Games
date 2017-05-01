@@ -1,6 +1,8 @@
 package es.ucm.fdi.tp.mvc;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.tp.base.model.*;
 import es.ucm.fdi.tp.mvc.GameEvent.EventType;
 
@@ -13,6 +15,7 @@ import es.ucm.fdi.tp.mvc.GameEvent.EventType;
  */
 public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> implements GameObservable<S, A> {
 
+	private Logger log;
     private S initState;
     private S actualState;
     private boolean finished;
@@ -20,6 +23,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
     private ArrayList< GameObserver< S, A > > obs;
 
     public GameTable(S initState) {
+    	this.log = Logger.getLogger("log");
         this.initState = initState;
         this.actualState = initState;
         this.started = false;
@@ -95,6 +99,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         obs.remove(o);
     }
     public void notifyObservers(GameEvent<S, A> e) {
+    	log.info("Sent event of type " + e.getType());
     	for(GameObserver<S, A> a : obs){
     		a.notifyEvent(e);
     	}

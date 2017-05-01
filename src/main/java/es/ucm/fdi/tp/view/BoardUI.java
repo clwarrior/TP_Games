@@ -2,6 +2,7 @@ package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
@@ -39,6 +40,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		public void sendMessage(String s);
 	}
 	
+	protected Logger log;
 	protected ColorTableUI.ColorModel cm;
 	protected int id;
 	protected S state;
@@ -48,6 +50,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	 * Constructor with parameters, initializes the attributes to given values
 	 */
 	public BoardUI(int id, ColorTableUI.ColorModel cm, S state, BoardListener<S, A> listener) {
+		this.log = Logger.getLogger("log");
 		this.cm = cm;
 		this.state = state;
 		this.listener = listener;

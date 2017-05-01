@@ -54,6 +54,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		
 		String modes[] = { "Manual", "Random", "Smart" };
 
+		this.log = Logger.getLogger("log");
 		this.listener = listener;
 		this.id = id;
 		this.bRandom = new JButton();
@@ -98,7 +99,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 				pMode = PlayerUI.PlayerMode.Smart;
 				break;
 			}
-			//log.fine("Changed mode to " + mode.getSelectedItem() + '.');
+			log.info("Player " + id + " changed mode to " + mode.getSelectedItem() + '.');
 			listener.changePlayerMode(pMode);
 			listener.sendMessage("You have changed to mode " + mode.getSelectedItem() + '.');
 		});
@@ -127,19 +128,19 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		b.addActionListener((e) -> {
 			switch (image) {
 			case "dice":
-				//log.fine("Clicked random move");
+				log.info("Player " + id + " clicked random move");
 				listener.makeRandomMove();
 				break;
 			case "nerd":
-				//log.fine("Clicked smart move");
+				log.info("Player " + id + " clicked smart move");
 				listener.makeSmartMove();
 				break;
 			case "restart":
-				//log.fine("Clicked restart");
+				log.info("Player " + id + " clicked restart");
 				listener.restartGame();
 				break;
 			case "exit":
-				//log.fine("Clicked exit.");
+				log.info("Player " + id + " clicked exit");
 				listener.closeGame();
 				break;
 			}
