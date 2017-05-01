@@ -3,18 +3,33 @@ package es.ucm.fdi.tp.ttt;
 import java.awt.Graphics;
 import es.ucm.fdi.tp.view.BoardUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
-
+/**
+ * A board for tick tack toe game.
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 2 (03/05/2017)
+ */
 public class TttBoardUI extends BoardUI<TttState, TttAction> {
 
 	private static final long serialVersionUID = -7980914351488645675L;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public TttBoardUI(int id, ColorModel cm, TttState state, BoardListener<TttState, TttAction> listener) {
 		super(id, cm, state, listener);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * In Ttt it's not necessary because there are not selected cells.
+	 */
 	@Override
 	public void paintSelected(Graphics g) {}
 
+	/**
+	 * {@inheritDoc}
+	 * It puts a piece in the clicked cell when it is the turn of the player
+	 */
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
 		if(state.getTurn() == id && !state.isFinished()) {
@@ -27,6 +42,9 @@ public class TttBoardUI extends BoardUI<TttState, TttAction> {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Integer getPosition(int row, int col) {
 		if (state.at(row, col) != TttState.EMPTY)
@@ -35,6 +53,10 @@ public class TttBoardUI extends BoardUI<TttState, TttAction> {
 			return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * In Ttt it's not necessary because there are not selected cells.
+	 */
 	@Override
 	public void nullSelected() {}
 

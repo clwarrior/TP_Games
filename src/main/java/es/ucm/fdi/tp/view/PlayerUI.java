@@ -16,8 +16,16 @@ import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
 import es.ucm.fdi.tp.view.RightPanel.RightPanelListener;
 import es.ucm.fdi.tp.view.BoardUI.BoardListener;
 
+/**
+ * Class in charge of the visual components on GUI mode for a given player.
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 2 (03/05/2017)
+ */
 public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S, A>>{
 	
+	/**
+	 * Enumerates the different posible player modes
+	 */
 	public enum PlayerMode {
 		Smart, Random, Manual;
 	}
@@ -33,6 +41,13 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	private NorthPanel<S, A> nPanel;
 	private BoardUI<S, A> board;
 	
+	/**
+	 * The constructor with parameters creates a window and adds all the necessary components to play 
+	 * by means of calling other methods and creating objects from other classes.
+	 * @param game A given GameTable of the game to play
+	 * @param name Name of the player
+	 * @param id Identifier number for the player
+	 */
 	public PlayerUI(GameTable<S, A> game, String name, int id){
 
 		S state = game.getState();
@@ -110,6 +125,10 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		game.addObserver((e) -> autoMove());
 	}
 	
+	/**
+	 * Makes a random or a smart move if player mode is the proper one in each case and it's the turn of 
+	 * the player
+	 */
 	private void autoMove(){
 		if(game != null && game.getState().getTurn() == id && !game.getState().isFinished()){
 			switch(playerMode){
@@ -123,7 +142,10 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			}
 		}
 	}
-	
+	 /**
+	  * Abstract method that given a gameTable with the parameters of the game which is going to be played and 
+	  * a name, creates a JFrame to held it
+	  */
 	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name);
 	public abstract BoardUI<S, A> createBoard(int id, ColorModel cm, S s, BoardListener<S, A> listener);
 	
@@ -135,6 +157,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		return id;
 	}
 	
+	/**
+	 * Method that makes a random move
+	 */
 	public void randomMove(){
 		A a = rPlayer.requestAction(game.getState());
 		board.nullSelected();
@@ -144,6 +169,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		rPanel.addMessage("Turn of player " + (id + 1) % 2);
 	}
 	
+	/**
+	 * Method that makes a smart move
+	 */
 	public void smartMove(){
 		A a = sPlayer.requestAction(game.getState());
 		board.nullSelected();

@@ -7,17 +7,31 @@ import es.ucm.fdi.tp.mvc.GameEvent;
 import es.ucm.fdi.tp.mvc.GameEvent.EventType;
 import es.ucm.fdi.tp.mvc.GameTable;
 
+/**
+ * Controller for the console mode
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 2 (03/05/2017)
+ */
 public class ConsoleController<S extends GameState<S, A>, A extends GameAction<S, A>>
 		implements Runnable{
 	
 	private List<GamePlayer> players;
 	private GameTable<S, A> game;
 
+	/**
+	 * Constructor with parameters that initializes the attributes to their given values
+	 * @param players
+	 * @param game
+	 */
 	public ConsoleController(List<GamePlayer> players, GameTable<S, A> game) {
 		this.players = players;
 		this.game = game;
 	}
 
+	/**
+	 * Method that helds the motor of the game. It initializes the game and keeps it playing until
+	 * the game is finished
+	 */
 	@Override
 	public void run() {
 		int playerCount = 0;

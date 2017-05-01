@@ -8,17 +8,35 @@ import es.ucm.fdi.tp.view.BoardUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.was.WasState.Coord;
 
+/**
+ * A board for Wolf and Sheep.
+ * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
+ * @version 2 (03/05/2017)
+ */
 public class WasBoardUI extends BoardUI<WasState, WasAction> {
 
 	private static final long serialVersionUID = -6806220148484079355L;
 
+	/**
+	 * Selected cell on the board
+	 */
 	private Coord selected;
 
+	/**
+	 * {@inheritDoc}
+	 * It sets selected to null.
+	 */
 	public WasBoardUI(int id, ColorModel cm, WasState state, BoardListener<WasState, WasAction> listener) {
 		super(id, cm, state, listener);
 		this.selected = null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * In Was, if you are a sheep, you need to select the piece first and the click into a valid cell to move it
+	 * and if you are the wolf just click into any correct cell to move.
+	 * If the click does not produce a valid action, it doesn't make anything.
+	 */
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
 		Coord click = new Coord(row, col);
@@ -48,7 +66,10 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 			}
 		}
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Integer getPosition(int row, int col) {
 		if (state.at(row, col) != state.EMPTY)
@@ -67,10 +88,20 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 		return WasState.dim;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * In was we need to set selected to null
+	 */
 	public void nullSelected() {
 		selected = null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * In was this method paints a square in the cells round the piece that is about to move to mark
+	 * the valid options to move. Furthermore, it paints a circle around the selected piece if you are
+	 * the sheep.
+	 */
 	@Override
 	public void paintSelected(Graphics g) {
 		if (state.getTurn() == state.SHEEP && id == state.SHEEP && selected != null) {
@@ -103,6 +134,11 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 
 	}
 
+	/**
+	 * Function that returns the inverse color of a given.
+	 * @param c Color to inverse
+	 * @return Inverse color
+	 */
 	private Color inverseColor(Color c) {
 		int red = 255 - c.getRed();
 		int green = 255 - c.getGreen();
