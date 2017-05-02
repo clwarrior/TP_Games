@@ -12,6 +12,10 @@ import es.ucm.fdi.tp.view.PlayerUI.PlayerMode;
 
 public class NorthPanelTest<S extends GameState<S, A>, A extends GameAction<S, A>> {
 	
+	/**
+	 * Test checking whether the North Panel is shown properly
+	 * @param args
+	 */
 	@SuppressWarnings("rawtypes")
 	public static void main(String ... args) {
 		NorthPanel<?, ?> np = new NorthPanel(0, new NorthPanelListener() {

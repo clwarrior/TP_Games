@@ -9,6 +9,10 @@ import es.ucm.fdi.tp.view.ColorTableUI;
 
 public class WasBoardUITest {
 
+	/**
+	 * Test checking whether the Wolf and Sheep board is shown properly
+	 * @param args
+	 */
 	public static void main(String ... args) {
 		WasBoardUI b = new WasBoardUI(0, new ColorTableUI().new ColorModel(2), new WasState(), new BoardListener<WasState, WasAction>() {
 

@@ -8,7 +8,7 @@ import es.ucm.fdi.tp.view.FrameUI;
 import es.ucm.fdi.tp.view.PlayerUI;
 
 /**
- * Implements the necessary methods of PlayerUI to the game Tick Tac Toe
+ * Implements the necessary methods of PlayerUI to the game Tic Tac Toe
  * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
  * @version 1 (03/05/2017)
  */
@@ -23,7 +23,7 @@ public class TttPlayerUI extends PlayerUI<TttState, TttAction> {
 	 */
 	@Override
 	public FrameUI createJFrame(GameTable<TttState, TttAction> ctrl, String name, int position) {
-		return new FrameUI("Tick Tac Toe - Player " + id + ": " + name, position);
+		return new FrameUI("Tic Tac Toe - Player " + id + ": " + name, position);
 	}
 
 	/**

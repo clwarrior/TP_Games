@@ -6,7 +6,7 @@ import java.util.List;
 import es.ucm.fdi.tp.base.model.GameState;
 
 /**
- * A TickTackToe state.
+ * A TicTacToe state.
  * Describes a board of TickTackToe that is either being
  * played or is already finished.
  */

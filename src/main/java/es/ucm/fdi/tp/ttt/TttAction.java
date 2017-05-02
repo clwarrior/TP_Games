@@ -3,7 +3,7 @@ package es.ucm.fdi.tp.ttt;
 import es.ucm.fdi.tp.base.model.GameAction;
 
 /**
- * An action for TickTackToe.
+ * An action for TicTacToe.
  */
 public class TttAction implements GameAction<TttState, TttAction> {
 

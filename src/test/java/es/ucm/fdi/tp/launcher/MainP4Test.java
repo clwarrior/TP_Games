@@ -7,7 +7,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-public class MainTest {
+public class MainP4Test {
 	
 	@Test
 	public void testNumberOfArguments() {

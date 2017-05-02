@@ -9,6 +9,10 @@ import es.ucm.fdi.tp.view.BoardUI.BoardListener;
 
 public class TttBoardUITest {
 
+	/**
+	 * Test checking whether the Tic Tac Toe board is shown properly
+	 * @param args
+	 */
 	public static void main(String ... args) {
 		TttBoardUI b = new TttBoardUI(0, new ColorTableUI().new ColorModel(2), new TttState(3), new BoardListener<TttState, TttAction>() {
 

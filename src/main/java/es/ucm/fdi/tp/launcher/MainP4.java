@@ -39,7 +39,7 @@ public class MainP4 {
 	/**
 	 * Method that returns an array of size n full with different names from the array "people".
 	 * @param n Size of the array returned
-	 * @return List< String > which contains n different names from the array "people"
+	 * @return List of String which contains n different names from the array "people"
 	 */
 	private static List< String > notRepNames(int n){
 		ArrayList< String > elegidos = new ArrayList<>(Arrays.asList(people));

@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import es.ucm.fdi.tp.view.BoardUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 /**
- * A board for tick tack toe game.
+ * A board for tic tac toe game.
  * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
  * @version 2 (03/05/2017)
  */

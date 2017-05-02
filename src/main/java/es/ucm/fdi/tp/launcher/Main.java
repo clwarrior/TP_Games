@@ -16,7 +16,6 @@ import es.ucm.fdi.tp.was.WasAction;
 import es.ucm.fdi.tp.was.WasPlayerUI;
 import es.ucm.fdi.tp.was.WasState;
 
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +54,7 @@ public class Main {
 	 * 
 	 * @param n
 	 *            Size of the array returned
-	 * @return List< String > which contains n different names from the array
+	 * @return List of String which contains n different names from the array
 	 *         "people"
 	 */
 	private static List<String> notRepNames(int n) {

@@ -8,6 +8,10 @@ import es.ucm.fdi.tp.view.RightPanel.RightPanelListener;
 
 public class RightPanelTest {
 
+	/**
+	 * Test checking whether the Right Panel is shown properly
+	 * @param args
+	 */
 	@SuppressWarnings("rawtypes")
 	public static void main(String ... args) {
 		
