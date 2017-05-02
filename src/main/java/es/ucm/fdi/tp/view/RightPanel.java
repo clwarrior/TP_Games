@@ -131,7 +131,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	 * Clears the status messages box
 	 */
 	public void clearMessages() {
-		log.info("Player's " + id + " messages cleared");
+		log.info("Messages clear to player " + id);
 		text.setText("");
 	}
 

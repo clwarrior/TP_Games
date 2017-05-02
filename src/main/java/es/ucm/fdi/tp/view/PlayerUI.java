@@ -47,8 +47,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	 * @param game A given GameTable of the game to play
 	 * @param name Name of the player
 	 * @param id Identifier number for the player
+	 * @param position 
 	 */
-	public PlayerUI(GameTable<S, A> game, String name, int id){
+	public PlayerUI(GameTable<S, A> game, String name, int id, int position){
 
 		S state = game.getState();
 		ColorModel cm = new ColorTableUI().new ColorModel(state.getPlayerCount());
@@ -60,7 +61,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		this.sPlayer = new SmartPlayer(name, 5);
 		this.sPlayer.join(id);
 		this.playerMode = PlayerMode.Manual;
-		this.jf = createJFrame(game, name);
+		this.jf = createJFrame(game, name, position);
 		this.rPanel = new RightPanel<S, A>(state.getPlayerCount(), cm, new RightPanelListener(){
 			public void changeColor(){
 				jf.repaint();
@@ -145,8 +146,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	 /**
 	  * Abstract method that given a gameTable with the parameters of the game which is going to be played and 
 	  * a name, creates a JFrame to held it
+	 * @param position 
 	  */
-	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name);
+	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name, int position);
 	public abstract BoardUI<S, A> createBoard(int id, ColorModel cm, S s, BoardListener<S, A> listener);
 	
 	public PlayerMode getPlayerMode(){

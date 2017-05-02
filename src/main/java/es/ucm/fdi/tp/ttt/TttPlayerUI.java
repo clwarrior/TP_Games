@@ -14,16 +14,16 @@ import es.ucm.fdi.tp.view.PlayerUI;
  */
 public class TttPlayerUI extends PlayerUI<TttState, TttAction> {
 
-	public TttPlayerUI(GameTable<TttState, TttAction> game, String name, int id) {
-		super(game, name, id);
+	public TttPlayerUI(GameTable<TttState, TttAction> game, String name, int id, int position) {
+		super(game, name, id, position);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public FrameUI createJFrame(GameTable<TttState, TttAction> ctrl, String name) {
-		return new FrameUI("Tick Tac Toe - Player " + id + ": " + name);
+	public FrameUI createJFrame(GameTable<TttState, TttAction> ctrl, String name, int position) {
+		return new FrameUI("Tick Tac Toe - Player " + id + ": " + name, position);
 	}
 
 	/**

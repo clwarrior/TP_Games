@@ -16,13 +16,14 @@ import es.ucm.fdi.tp.was.WasAction;
 import es.ucm.fdi.tp.was.WasPlayerUI;
 import es.ucm.fdi.tp.was.WasState;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -118,6 +119,9 @@ public class Main {
 
 		List<GamePlayer> players = new ArrayList<GamePlayer>();
 		List<String> names = notRepNames(playerModes.length);
+		
+		int screenSize = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int separator = screenSize / playerModes.length;
 
 		SwingUtilities.invokeLater(new Runnable() {
 
@@ -129,7 +133,7 @@ public class Main {
 						players.add(new ConsolePlayer(names.get(i),
 								new Scanner(System.in)));
 						new TttPlayerUI((GameTable<TttState, TttAction>) game,
-								players.get(i).getName(), i);
+								players.get(i).getName(), i, i * separator);
 					}
 					game.start();
 				} else if (gType.equals("was")){
@@ -137,7 +141,7 @@ public class Main {
 						players.add(new ConsolePlayer(names.get(i),
 								new Scanner(System.in)));
 						new WasPlayerUI((GameTable<WasState, WasAction>) game,
-								players.get(i).getName(), i);
+								players.get(i).getName(), i, i * separator);
 					}
 					game.start();
 				}

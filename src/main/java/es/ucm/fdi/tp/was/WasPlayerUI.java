@@ -12,16 +12,16 @@ import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
  */
 public class WasPlayerUI extends PlayerUI<WasState, WasAction> {
 
-	public WasPlayerUI(GameTable<WasState, WasAction> game, String name, int id) {
-		super(game, name, id);
+	public WasPlayerUI(GameTable<WasState, WasAction> game, String name, int id, int position) {
+		super(game, name, id, position);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public FrameUI createJFrame(GameTable<WasState, WasAction> game, String name) {
-		return new FrameUI("Wolf and Sheep - Player " + id + ": " + name);
+	public FrameUI createJFrame(GameTable<WasState, WasAction> game, String name, int position) {
+		return new FrameUI("Wolf and Sheep - Player " + id + ": " + name, position);
 	}
 
 	/**

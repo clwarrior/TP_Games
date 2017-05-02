@@ -16,18 +16,20 @@ public class FrameUI extends JFrame {
 	/**
 	 * Constructor that given a title creates a JFrame with that name
 	 * @param title Name
+	 * @param position 
 	 */
-	public FrameUI(String title) {
+	public FrameUI(String title, int position) {
 		super(title);
-		initGUI();
+		initGUI(position);
 	}
 	
 	/**
 	 * Method that initializes the JFrame (give it a size, makes it resizable and visible...)
 	 */
-	private void initGUI() {
+	private void initGUI(int position) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 500);
+		setLocation(position, 10);
 		setMinimumSize(new Dimension(450, 350));
 		setResizable(true);
 		setVisible(true);
