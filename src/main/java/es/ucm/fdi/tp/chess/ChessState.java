@@ -18,7 +18,9 @@ import static es.ucm.fdi.tp.chess.ChessBoard.*;
  */
 public class ChessState extends GameState<ChessState, ChessAction> {
 
-    private static final Logger log = Logger.getLogger(ChessState.class.getName());
+	private static final long serialVersionUID = 1625085984570128665L;
+
+	private static final Logger log = Logger.getLogger(ChessState.class.getName());
 
     private final int turn;
     private boolean finished;

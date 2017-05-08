@@ -10,6 +10,8 @@ import static es.ucm.fdi.tp.chess.ChessState.BLACK;
  */
 public class ChessAction implements GameAction<ChessState, ChessAction> {
 
+	private static final long serialVersionUID = 823597865053975038L;
+	
 	private int player;
     private int srcRow;
     private int srcCol;
