@@ -35,7 +35,7 @@ public abstract class GameState<S extends GameState<S, A>, A extends GameAction<
 	/**
 	 * @return the name of the game, by defualt the name of the class
 	 */
-	public String getGameDescreption() {
+	public String getGameDescription() {
 		return this.getClass().getName();
 	}
 
