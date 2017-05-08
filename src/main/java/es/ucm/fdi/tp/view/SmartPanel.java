@@ -37,6 +37,7 @@ public class SmartPanel extends JPanel {
 		this.time = new SpinnerNumberModel(5000, 500, 5000, 500);
 		this.stop = new ButtonUI();
 		
+		
 		initGUI();
 	}
 
@@ -47,6 +48,7 @@ public class SmartPanel extends JPanel {
 		
 		JSpinner numThreadsSpin = new JSpinner(numThreads);
 		numThreadsSpin.setToolTipText("Number of threads available to the SmartPlayer algorithm.");
+		numThreadsSpin.addChangeListener((e) -> listener.changeNumThreads());
 		
 		JLabel threadsText = new JLabel("threads");
 		
@@ -61,6 +63,7 @@ public class SmartPanel extends JPanel {
 		
 		JSpinner timeSpin = new JSpinner(time);
 		timeSpin.setToolTipText("Maximum time to make the smart movement.");
+		timeSpin.addChangeListener((e) -> listener.changeTime());
 		
 		JLabel timeText = new JLabel("ms.");
 		
@@ -80,6 +83,21 @@ public class SmartPanel extends JPanel {
 		this.add(threadsPanel);
 		this.add(timePanel);
 		this.add(stop);
+	}
+	
+	public int getThreads(){
+		return numThreads.getNumber().intValue();
+	}
+	
+	public int getTime(){
+		return time.getNumber().intValue();
+	}
+	
+	public void changeBrainColor(){
+		if(brain.getBackground().equals(Color.BLACK))
+			brain.setBackground(Color.YELLOW);
+		else
+			brain.setBackground(Color.BLACK);
 	}
 	
 }
