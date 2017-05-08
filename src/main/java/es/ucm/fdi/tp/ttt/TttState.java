@@ -17,7 +17,7 @@ public class TttState extends GameState<TttState, TttAction> {
 	private final boolean finished;
 	private final int[][] board;
 	private final int winner;
-	private final int dim;
+	final int dim;
 
 	final static int EMPTY = -1;
 
