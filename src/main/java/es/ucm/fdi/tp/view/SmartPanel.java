@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class SmartPanel extends JPanel {
 
@@ -83,6 +86,8 @@ public class SmartPanel extends JPanel {
 		this.add(threadsPanel);
 		this.add(timePanel);
 		this.add(stop);
+		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK, 2, false),
+				"Smart Moves", TitledBorder.CENTER, TitledBorder.TOP));
 	}
 	
 	public int getThreads(){

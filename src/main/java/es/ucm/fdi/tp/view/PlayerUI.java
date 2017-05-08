@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import es.ucm.fdi.tp.base.model.GameAction;
@@ -15,6 +16,7 @@ import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
 import es.ucm.fdi.tp.view.RightPanel.RightPanelListener;
 import es.ucm.fdi.tp.view.BoardUI.BoardListener;
+import es.ucm.fdi.tp.view.SmartPanel.SmartPanelListener;
 
 /**
  * Class in charge of the visual components on GUI mode for a given player.
@@ -39,6 +41,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	private FrameUI jf;
 	private RightPanel<S, A> rPanel;
 	private NorthPanel<S, A> nPanel;
+	private SmartPanel sPanel;
 	private BoardUI<S, A> board;
 	
 	/**
@@ -101,6 +104,24 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 				rPanel.addMessage(message);
 			}
 		});
+		this.sPanel = new SmartPanel(id, new SmartPanelListener(){
+
+			@Override
+			public void changeNumThreads() {
+				
+			}
+
+			@Override
+			public void changeTime() {
+				
+			}
+
+			@Override
+			public void stopSearch() {
+				
+			}
+			
+		});
 		this.board = createBoard(id, cm, state, new BoardListener<S, A>(){
 			public void makeManualMove(A a) {
 				if (id == game.getState().getTurn()){
@@ -116,7 +137,10 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		
 		jf.add(board, BorderLayout.CENTER);
 		jf.add(rPanel, BorderLayout.EAST);
-		jf.add(nPanel, BorderLayout.NORTH);	
+		JPanel auxNorth = new JPanel();
+		auxNorth.add(nPanel, BorderLayout.WEST);	
+		auxNorth.add(sPanel, BorderLayout.EAST);
+		jf.add(auxNorth, BorderLayout.NORTH);
 		jf.setVisible(true);
 		
 		
