@@ -55,7 +55,8 @@ public class ConcurrentDeepeningMinMax {
      *  method has executed, getEvaluationCount returns the total number of board
      *  evaluations performed during the search.
      */
-    public <S extends GameState<S,A>, A extends GameAction<S,A>> MinMax.Node<S,A>
+    @SuppressWarnings("unchecked")
+	public <S extends GameState<S,A>, A extends GameAction<S,A>> MinMax.Node<S,A>
             chooseNode(S state, int playerNumber, int millis) {
 
         evaluationCount.set(0);

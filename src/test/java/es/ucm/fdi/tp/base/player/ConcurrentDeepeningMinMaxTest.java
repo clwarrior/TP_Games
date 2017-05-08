@@ -2,6 +2,7 @@ package es.ucm.fdi.tp.base.player;
 
 import es.ucm.fdi.tp.chess.ChessAction;
 import es.ucm.fdi.tp.chess.ChessState;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -11,7 +12,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class ConcurrentDeepeningMinMaxTest {
 
-    @Test
+    @SuppressWarnings("unused")
+	@Test
     public void simpleTest() {
         ConcurrentDeepeningMinMax cmm1 = new ConcurrentDeepeningMinMax(1);
         ConcurrentDeepeningMinMax cmm2 = new ConcurrentDeepeningMinMax(4);
