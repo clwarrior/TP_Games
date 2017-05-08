@@ -1,11 +1,8 @@
 package es.ucm.fdi.tp.view;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.logging.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -42,10 +39,10 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	}
 	
 	private Logger log;
-	private JButton bRandom;
-	private JButton bSmart;
-	private JButton bRestart;
-	private JButton bExit;
+	private ButtonUI bRandom;
+	private ButtonUI bSmart;
+	private ButtonUI bRestart;
+	private ButtonUI bExit;
 	private JComboBox<String> mode;
 	private NorthPanelListener listener;
 	private int id;
@@ -57,10 +54,10 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		this.log = Logger.getLogger("log");
 		this.listener = listener;
 		this.id = id;
-		this.bRandom = new JButton();
-		this.bSmart = new JButton();
-		this.bRestart = new JButton();
-		this.bExit = new JButton();
+		this.bRandom = new ButtonUI();
+		this.bSmart = new ButtonUI();
+		this.bRestart = new ButtonUI();
+		this.bExit = new ButtonUI();
 
 		this.mode = new JComboBox<String>(modes);
 		
@@ -73,10 +70,22 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	 */
 	private void initGUI() {
 		// Buttons
-		bRandom = createButton("dice", "Make random movement");
-		bSmart = createButton("nerd", "Make smart movement");
-		bRestart = createButton("restart", "Restart game");
-		bExit = createButton("exit", "Close game");
+		bRandom = new ButtonUI("dice", "Make random movement", (e)->{
+			log.info("Player " + id + " clicked random move");
+			listener.makeRandomMove();
+		});
+		bSmart = new ButtonUI("nerd", "Make smart movement", (e)->{
+			log.info("Player " + id + " clicked smart move");
+			listener.makeSmartMove();
+		});
+		bRestart = new ButtonUI("restart", "Restart game", (e)->{
+			log.info("Player " + id + " clicked restart");
+			listener.restartGame();
+		});
+		bExit = new ButtonUI("exit", "Close game", (e)->{
+			log.info("Player " + id + " clicked exit");
+			listener.closeGame();
+		});
 
 		JPanel buttons = new JPanel();
 		buttons.add(bRandom);
@@ -114,40 +123,6 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.add(buttons);
 		this.add(plMode);
-	}
-
-	/**
-	 * Creates and returns a JButton with the given icon and the given tip text
-	 * @param image to be set as the icon of the button
-	 * @param message to be set as the tip text of the button
-	 * @return JButton with the requested characteristics
-	 */
-	private JButton createButton(String image, String message) {
-		JButton b = new JButton();
-		b.setIcon(new ImageIcon("src/main/resources/" + image + ".png"));
-		b.addActionListener((e) -> {
-			switch (image) {
-			case "dice":
-				log.info("Player " + id + " clicked random move");
-				listener.makeRandomMove();
-				break;
-			case "nerd":
-				log.info("Player " + id + " clicked smart move");
-				listener.makeSmartMove();
-				break;
-			case "restart":
-				log.info("Player " + id + " clicked restart");
-				listener.restartGame();
-				break;
-			case "exit":
-				log.info("Player " + id + " clicked exit");
-				listener.closeGame();
-				break;
-			}
-		});
-		b.setToolTipText(message);
-		b.setPreferredSize(new Dimension(45, 45));
-		return b;
 	}
 
 	/**
