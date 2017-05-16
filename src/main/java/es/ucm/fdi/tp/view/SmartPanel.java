@@ -10,10 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class SmartPanel extends JPanel {
+import es.ucm.fdi.tp.base.model.GameAction;
+import es.ucm.fdi.tp.base.model.GameState;
+import es.ucm.fdi.tp.mvc.GameEvent;
+import es.ucm.fdi.tp.mvc.GameObserver;
+
+public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel implements GameObserver<S, A>{
 
 	private static final long serialVersionUID = 2396384271986958886L;
 	
@@ -52,7 +56,10 @@ public class SmartPanel extends JPanel {
 		
 		JSpinner numThreadsSpin = new JSpinner(numThreads);
 		numThreadsSpin.setToolTipText("Number of threads available to the SmartPlayer algorithm.");
-		numThreadsSpin.addChangeListener((e) -> listener.changeNumThreads());
+		numThreadsSpin.addChangeListener((e) -> {
+			log.info("Player " + id + " changed threads to " + getThreads() + "ms");
+			listener.changeNumThreads();
+			});
 		
 		JLabel threadsText = new JLabel("threads");
 		
@@ -67,7 +74,10 @@ public class SmartPanel extends JPanel {
 		
 		JSpinner timeSpin = new JSpinner(time);
 		timeSpin.setToolTipText("Maximum time to make the smart movement.");
-		timeSpin.addChangeListener((e) -> listener.changeTime());
+		timeSpin.addChangeListener((e) -> {
+			log.info("Player " + id + " changed time to " + getTime() + "ms");
+			listener.changeTime();
+		});
 		
 		JLabel timeText = new JLabel("ms.");
 		
@@ -81,6 +91,7 @@ public class SmartPanel extends JPanel {
 			log.info("Player " + id + " clicked stop smart movement");
 			listener.stopSearch();
 		});
+		stop.setEnabled(false);
 		
 		// SmartPanel
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -99,11 +110,26 @@ public class SmartPanel extends JPanel {
 		return time.getNumber().intValue();
 	}
 	
-	public void changeBrainColor(){
-		if(brain.getBackground().equals(Color.BLACK))
+	public void thinking(){
+		if(brain.getBackground().equals(Color.BLACK)) {
 			brain.setBackground(Color.YELLOW);
-		else
+			stop.setEnabled(true);
+		} else {
 			brain.setBackground(Color.BLACK);
+			stop.setEnabled(false);
+		}
+		repaint();
+	}
+
+	@Override
+	public void notifyEvent(GameEvent<S, A> e) {
+		switch(e.getType()){
+		case Stop:
+			listener.stopSearch();
+			break;
+		default:
+			break;
+		}
 	}
 	
 }

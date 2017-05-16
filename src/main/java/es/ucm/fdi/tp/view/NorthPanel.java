@@ -124,6 +124,10 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		this.add(buttons);
 		this.add(plMode);
 	}
+	
+	public void changeManual() {
+		mode.setSelectedIndex(0);
+	}
 
 	/**
 	 * {@inheritDoc}
