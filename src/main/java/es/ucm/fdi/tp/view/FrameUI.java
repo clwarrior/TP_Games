@@ -28,9 +28,9 @@ public class FrameUI extends JFrame {
 	 */
 	private void initGUI(int position) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(600, 500);
+		setSize(775, 675);
 		setLocation(position, 10);
-		setMinimumSize(new Dimension(450, 350));
+		setMinimumSize(new Dimension(775, 675));
 		setResizable(true);
 		setVisible(true);
 	}
