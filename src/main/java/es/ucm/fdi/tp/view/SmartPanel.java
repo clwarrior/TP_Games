@@ -47,6 +47,7 @@ public class SmartPanel extends JPanel {
 	private void initGUI() {
 		// ThreadsPanel
 		brain.setIcon(new ImageIcon("src/main/resources/brain.png"));
+		brain.setOpaque(true);
 		brain.setBackground(Color.BLACK);
 		
 		JSpinner numThreadsSpin = new JSpinner(numThreads);
