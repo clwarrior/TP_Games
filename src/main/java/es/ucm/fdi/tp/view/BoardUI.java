@@ -2,13 +2,9 @@ package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.logging.Logger;
-
 import es.ucm.fdi.tp.base.model.GameAction;
 import es.ucm.fdi.tp.base.model.GameState;
 import es.ucm.fdi.tp.extra.jboard.JBoard;
-import es.ucm.fdi.tp.mvc.GameEvent;
-import es.ucm.fdi.tp.mvc.GameObserver;
 
 /**
  * Abstract class that implements the common methods and parameters for any board game.
@@ -17,7 +13,7 @@ import es.ucm.fdi.tp.mvc.GameObserver;
  * @param <S> A GameState that represents the state od the board in a moment of the game
  * @param <A> A Game Action to apply to the state
  */
-public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction< S, A > > extends JBoard implements GameObserver<S, A>{
+public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction< S, A > > extends JBoard{
 
 	private static final long serialVersionUID = -2798902232928717390L;
 	
@@ -39,8 +35,7 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		 */
 		public void sendMessage(String s);
 	}
-	
-	protected Logger log;
+
 	protected ColorTableUI.ColorModel cm;
 	protected int id;
 	protected S state;
@@ -50,7 +45,6 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 	 * Constructor with parameters, initializes the attributes to given values
 	 */
 	public BoardUI(int id, ColorTableUI.ColorModel cm, S state, BoardListener<S, A> listener) {
-		this.log = Logger.getLogger("log");
 		this.cm = cm;
 		this.state = state;
 		this.listener = listener;
@@ -102,28 +96,8 @@ public abstract class BoardUI< S extends GameState< S, A >, A extends GameAction
 		return (row+col) % 2 == 0 ? Color.LIGHT_GRAY : Color.BLACK;
 	}
 	
-	/**
-	 * Given an event, it reacts to it according to its type
-	 */
-	@Override
-	public void notifyEvent(GameEvent<S, A> e){
-		switch(e.getType()){
-		case Start:
-		case Change:
-			state = e.getState();
-			if(e.getState().getTurn() == id && !e.getState().isFinished()){
-				setEnabled(true);
-				listener.sendMessage("It's your turn.");
-			}
-			break;
-		case Stop:
-			nullSelected();
-			setEnabled(false);
-			break;
-		default:
-			break;
-		}
-		repaint();
+	public void setState(S s){
+		this.state = s;
 	}
 
 	/**

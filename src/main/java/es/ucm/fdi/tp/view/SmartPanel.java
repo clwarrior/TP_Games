@@ -2,6 +2,7 @@ package es.ucm.fdi.tp.view;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
@@ -12,12 +13,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
-import es.ucm.fdi.tp.base.model.GameAction;
-import es.ucm.fdi.tp.base.model.GameState;
-import es.ucm.fdi.tp.mvc.GameEvent;
-import es.ucm.fdi.tp.mvc.GameObserver;
-
-public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel implements GameObserver<S, A>{
+public class SmartPanel extends JPanel{
 
 	private static final long serialVersionUID = 2396384271986958886L;
 	
@@ -26,8 +22,7 @@ public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		public void changeTime();
 		public void stopSearch();
 	}
-	
-	private Logger log;
+
 	private int id;
 	private JLabel brain;
 	private SpinnerNumberModel numThreads;
@@ -36,7 +31,6 @@ public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	private SmartPanelListener listener;
 
 	public SmartPanel(int id, SmartPanelListener listener){
-		this.log = Logger.getLogger("log");
 		this.listener = listener;
 		this.brain = new JLabel();
 		this.numThreads = new SpinnerNumberModel(Runtime.getRuntime().availableProcessors(), 1, 
@@ -57,7 +51,7 @@ public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		JSpinner numThreadsSpin = new JSpinner(numThreads);
 		numThreadsSpin.setToolTipText("Number of threads available to the SmartPlayer algorithm.");
 		numThreadsSpin.addChangeListener((e) -> {
-			log.info("Player " + id + " changed threads to " + getThreads() + "ms");
+			Logger.getLogger("log").info("Player " + id + " changed threads to " + getThreads() + "ms");
 			listener.changeNumThreads();
 			});
 		
@@ -75,7 +69,7 @@ public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		JSpinner timeSpin = new JSpinner(time);
 		timeSpin.setToolTipText("Maximum time to make the smart movement.");
 		timeSpin.addChangeListener((e) -> {
-			log.info("Player " + id + " changed time to " + getTime() + "ms");
+			Logger.getLogger("log").info("Player " + id + " changed time to " + getTime() + "ms");
 			listener.changeTime();
 		});
 		
@@ -87,10 +81,14 @@ public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		timePanel.add(timeText);
 		
 		// Stop
-		stop = new ButtonUI("stop", "Stop the current calculations to obtain a smart movement", (e) ->{
-			log.info("Player " + id + " clicked stop smart movement");
-			listener.stopSearch();
-		});
+		try {
+			stop = new ButtonUI("stop", "Stop the current calculations to obtain a smart movement", (e) ->{
+				Logger.getLogger("log").info("Player " + id + " clicked stop smart movement");
+				listener.stopSearch();
+			});
+		} catch (IOException  | IllegalArgumentException e) {
+			Logger.getLogger("log").severe("El boton no se cargo correctamente");
+		}
 		stop.setEnabled(false);
 		
 		// SmartPanel
@@ -119,17 +117,5 @@ public class SmartPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 			stop.setEnabled(false);
 		}
 		repaint();
-	}
-
-	@Override
-	public void notifyEvent(GameEvent<S, A> e) {
-		switch(e.getType()){
-		case Stop:
-			listener.stopSearch();
-			break;
-		default:
-			break;
-		}
-	}
-	
+	}	
 }

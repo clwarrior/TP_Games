@@ -13,8 +13,8 @@ import es.ucm.fdi.tp.base.player.ConcurrentAiPlayer;
 import es.ucm.fdi.tp.base.player.RandomPlayer;
 import es.ucm.fdi.tp.mvc.GameTable;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
-import es.ucm.fdi.tp.view.NorthPanel.NorthPanelListener;
-import es.ucm.fdi.tp.view.RightPanel.RightPanelListener;
+import es.ucm.fdi.tp.view.ControlPanel.ControlPanelListener;
+import es.ucm.fdi.tp.view.InfoPanel.InfoPanelListener;
 import es.ucm.fdi.tp.view.BoardUI.BoardListener;
 import es.ucm.fdi.tp.view.SmartPanel.SmartPanelListener;
 
@@ -41,9 +41,9 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	private PlayerMode playerMode;
 
 	private FrameUI jf;
-	private RightPanel<S, A> rPanel;
-	private NorthPanel<S, A> nPanel;
-	private SmartPanel<S, A> sPanel;
+	private InfoPanel iPanel;
+	private ControlPanel cPanel;
+	private SmartPanel sPanel;
 	private BoardUI<S, A> board;
 
 	/**
@@ -62,7 +62,8 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	public PlayerUI(GameTable<S, A> game, String name, int id, int position) {
 
 		S state = game.getState();
-		ColorModel cm = new ColorTableUI().new ColorModel(state.getPlayerCount());
+		ColorModel cm = new ColorTableUI().new ColorModel(
+				state.getPlayerCount());
 
 		this.id = id;
 		this.game = game;
@@ -73,22 +74,23 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		this.sPlayer.join(id);
 		this.playerMode = PlayerMode.Manual;
 		this.jf = createJFrame(game, name, position);
-		this.rPanel = new RightPanel<S, A>(state.getPlayerCount(), cm, new RightPanelListener() {
-			public void changeColor() {
-				jf.repaint();
-			}
-		}, id);
-		this.nPanel = new NorthPanel<S, A>(id, new NorthPanelListener() {
+		this.iPanel = new InfoPanel(state.getPlayerCount(), cm,
+				new InfoPanelListener() {
+					public void changeColor() {
+						jf.repaint();
+					}
+				}, id);
+		this.cPanel = new ControlPanel(id, new ControlPanelListener() {
 			public void makeRandomMove() {
 				if (id == game.getState().getTurn()) {
-					rPanel.addMessage("You have requested a random move.");
+					iPanel.addMessage("You have requested a random move.");
 					randomMove();
 				}
 			}
 
 			public void makeSmartMove() {
 				if (id == game.getState().getTurn()) {
-					rPanel.addMessage("You have requested a smart move.");
+					iPanel.addMessage("You have requested a smart move.");
 					smartMove();
 				}
 			}
@@ -100,10 +102,13 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			}
 
 			public void closeGame() {
-				int answer = JOptionPane.showOptionDialog(new JFrame(), "Do you really want to exit?", "Confirm Exit",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-						new String[] { "Yes, I want to leave", "No, I'd rather stay" },
-						new String("Yes, I want to leave"));
+				int answer = JOptionPane.showOptionDialog(new JFrame(),
+						"Do you really want to exit?", "Confirm Exit",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null,
+						new String[] { "Yes, I want to leave",
+								"No, I'd rather stay" }, new String(
+								"Yes, I want to leave"));
 				if (answer == JOptionPane.YES_OPTION)
 					System.exit(0);
 			}
@@ -114,10 +119,10 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			}
 
 			public void sendMessage(String message) {
-				rPanel.addMessage(message);
+				iPanel.addMessage(message);
 			}
 		});
-		this.sPanel = new SmartPanel<S, A>(id, new SmartPanelListener() {
+		this.sPanel = new SmartPanel(id, new SmartPanelListener() {
 
 			@Override
 			public void changeNumThreads() {
@@ -132,9 +137,11 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			@Override
 			public void stopSearch() {
 				smartMove.interrupt();
-				rPanel.addMessage("You have stopped the smart movement.");
-				playerMode = PlayerMode.Manual;
-				nPanel.changeManual();
+				iPanel.addMessage("You have stopped the smart movement.");
+				if(playerMode != PlayerMode.Manual){
+					playerMode = PlayerMode.Manual;
+					cPanel.changeManual();
+				}
 			}
 
 		});
@@ -147,22 +154,56 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 
 			@Override
 			public void sendMessage(String message) {
-				rPanel.addMessage(message);
+				iPanel.addMessage(message);
 			}
 		});
 
 		jf.add(board, BorderLayout.CENTER);
-		jf.add(rPanel, BorderLayout.EAST);
+		jf.add(iPanel, BorderLayout.EAST);
 		JPanel auxNorth = new JPanel();
-		auxNorth.add(nPanel, BorderLayout.WEST);
+		auxNorth.add(cPanel, BorderLayout.WEST);
 		auxNorth.add(sPanel, BorderLayout.EAST);
 		jf.add(auxNorth, BorderLayout.NORTH);
 		jf.setVisible(true);
 
-		game.addObserver(rPanel);
-		game.addObserver(nPanel);
-		game.addObserver(board);
-		game.addObserver((e) -> autoMove());
+		game.addObserver((e) -> {
+			switch (e.getType()) {
+			case Start:
+				cPanel.enableButtons(e.getState().getTurn() == id);
+				board.setState(e.getState());
+				if(e.getState().getTurn() == id && !e.getState().isFinished())
+					iPanel.addMessage("It's your turn.");
+				iPanel.clearMessages();
+				iPanel.addMessage("The game has started.");
+				autoMove();
+				break;
+			case Stop:
+				smartMove.interrupt();
+				cPanel.enableButtons(false);
+				board.nullSelected();
+				iPanel.addMessage("The game has ended.");
+				int winner = e.getState().getWinner();
+				if (winner == id)
+					iPanel.addMessage("Congratulations. You have won.");
+				else if (winner != -1)
+					iPanel.addMessage("The winner is player "
+							+ e.getState().getWinner() + '.');
+				else
+					iPanel.addMessage("It's a draw!");
+				break;
+			case Change:
+				smartMove.interrupt();
+				cPanel.enableButtons(e.getState().getTurn() == id);
+				board.setState(e.getState());
+				if(e.getState().getTurn() == id && !e.getState().isFinished())
+					iPanel.addMessage("It's your turn.");
+				autoMove();
+			default:
+				autoMove();
+				break;
+			}
+			jf.repaint();
+		});
 	}
 
 	/**
@@ -170,7 +211,8 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	 * case and it's the turn of the player
 	 */
 	private void autoMove() {
-		if (game != null && game.getState().getTurn() == id && !game.getState().isFinished()) {
+		if (game != null && game.getState().getTurn() == id
+				&& !game.getState().isFinished()) {
 			switch (playerMode) {
 			case Random:
 				randomMove();
@@ -190,9 +232,11 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	 * 
 	 * @param position
 	 */
-	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name, int position);
+	public abstract FrameUI createJFrame(GameTable<S, A> ctrl, String name,
+			int position);
 
-	public abstract BoardUI<S, A> createBoard(int id, ColorModel cm, S s, BoardListener<S, A> listener);
+	public abstract BoardUI<S, A> createBoard(int id, ColorModel cm, S s,
+			BoardListener<S, A> listener);
 
 	public PlayerMode getPlayerMode() {
 		return playerMode;
@@ -211,7 +255,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		SwingUtilities.invokeLater(() -> {
 			game.execute(a);
 		});
-		rPanel.addMessage("Turn of player " + (id + 1) % 2);
+		iPanel.addMessage("Turn of player " + (id + 1) % 2);
 	}
 
 	/**
@@ -225,12 +269,16 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 				A a = sPlayer.requestAction(game.getState());
 				sPanel.thinking();
 				board.nullSelected();
-				SwingUtilities.invokeLater(() -> {
-					if(a != null && !smartMove.isInterrupted()) {
-						game.execute(a);
-						rPanel.addMessage("Turn of player " + (id + 1) % 2);
-					}
-				});
+				if (!game.isStopped() && a != null && !smartMove.isInterrupted()) {
+					SwingUtilities.invokeLater(() -> {
+						if (game.getState().isValid(a)) {
+							game.execute(a);
+							if (!game.getState().isFinished())
+								iPanel.addMessage("Turn of player " + (id + 1)
+										% 2);
+						}
+					});
+				}
 			}
 		});
 		smartMove.start();

@@ -1,57 +1,62 @@
 package es.ucm.fdi.tp.view;
 
 import java.awt.FlowLayout;
+import java.io.IOException;
 import java.util.logging.*;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import es.ucm.fdi.tp.base.model.GameAction;
-import es.ucm.fdi.tp.base.model.GameState;
-import es.ucm.fdi.tp.mvc.GameEvent;
-import es.ucm.fdi.tp.mvc.GameObserver;
 import es.ucm.fdi.tp.view.PlayerUI.PlayerMode;
 
 /**
- * North panel of the window. Contains four buttons and one comboBox to change the mode
+ * North panel of the window. Contains four buttons and one comboBox to change
+ * the mode
+ * 
  * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
  * @version 1 (03/05/2017)
- * @param <S> GameState of the game played
- * @param <A> GameAction of the game played
+ * @param <S>
+ *            GameState of the game played
+ * @param <A>
+ *            GameAction of the game played
  */
-public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> extends JPanel implements GameObserver<S, A>{
+public class ControlPanel extends JPanel {
 
 	private static final long serialVersionUID = -8845489814772928993L;
-	
+
 	/**
 	 * Listener to the actions made in this panel
+	 * 
 	 * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
 	 * @version 1 (03/05/2017)
 	 */
-	public interface NorthPanelListener{
+	public interface ControlPanelListener {
 		public void makeRandomMove();
+
 		public void makeSmartMove();
+
 		public void restartGame();
+
 		public void closeGame();
+
 		public void changePlayerMode(PlayerMode p);
+
 		public void sendMessage(String s);
 	}
-	
-	private Logger log;
+
 	private ButtonUI bRandom;
 	private ButtonUI bSmart;
 	private ButtonUI bRestart;
 	private ButtonUI bExit;
 	private JComboBox<String> mode;
-	private NorthPanelListener listener;
+	private ControlPanelListener listener;
 	private int id;
 
-	public NorthPanel(int id, NorthPanelListener listener) {
-		
+	public ControlPanel(int id, ControlPanelListener listener) {
+
 		String modes[] = { "Manual", "Random", "Smart" };
 
-		this.log = Logger.getLogger("log");
 		this.listener = listener;
 		this.id = id;
 		this.bRandom = new ButtonUI();
@@ -60,7 +65,7 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		this.bExit = new ButtonUI();
 
 		this.mode = new JComboBox<String>(modes);
-		
+
 		initGUI();
 
 	}
@@ -70,22 +75,26 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 	 */
 	private void initGUI() {
 		// Buttons
-		bRandom = new ButtonUI("dice", "Make random movement", (e)->{
-			log.info("Player " + id + " clicked random move");
-			listener.makeRandomMove();
-		});
-		bSmart = new ButtonUI("nerd", "Make smart movement", (e)->{
-			log.info("Player " + id + " clicked smart move");
-			listener.makeSmartMove();
-		});
-		bRestart = new ButtonUI("restart", "Restart game", (e)->{
-			log.info("Player " + id + " clicked restart");
-			listener.restartGame();
-		});
-		bExit = new ButtonUI("exit", "Close game", (e)->{
-			log.info("Player " + id + " clicked exit");
-			listener.closeGame();
-		});
+		try {
+			bRandom = new ButtonUI("dice", "Make random movement", (e) -> {
+				Logger.getLogger("log").info("Player " + id + " clicked random move");
+				listener.makeRandomMove();
+			});
+			bSmart = new ButtonUI("nerd", "Make smart movement", (e) -> {
+				Logger.getLogger("log").info("Player " + id + " clicked smart move");
+				listener.makeSmartMove();
+			});
+			bRestart = new ButtonUI("restart", "Restart game", (e) -> {
+				Logger.getLogger("log").info("Player " + id + " clicked restart");
+				listener.restartGame();
+			});
+			bExit = new ButtonUI("exit", "Close game", (e) -> {
+				Logger.getLogger("log").info("Player " + id + " clicked exit");
+				listener.closeGame();
+			});
+		} catch (IOException | IllegalArgumentException e) {
+			Logger.getLogger("log").severe("Los botones no se cargaron correctamente");
+		}
 
 		JPanel buttons = new JPanel();
 		buttons.add(bRandom);
@@ -108,9 +117,11 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 				pMode = PlayerUI.PlayerMode.Smart;
 				break;
 			}
-			log.info("Player " + id + " changed mode to " + mode.getSelectedItem() + '.');
+			Logger.getLogger("log").info("Player " + id + " changed mode to "
+					+ mode.getSelectedItem() + '.');
 			listener.changePlayerMode(pMode);
-			listener.sendMessage("You have changed to mode " + mode.getSelectedItem() + '.');
+			listener.sendMessage("You have changed to mode "
+					+ mode.getSelectedItem() + '.');
 		});
 
 		JLabel modeText = new JLabel("Player Mode: ");
@@ -124,28 +135,13 @@ public class NorthPanel<S extends GameState<S, A>, A extends GameAction<S, A>> e
 		this.add(buttons);
 		this.add(plMode);
 	}
-	
+
 	public void changeManual() {
 		mode.setSelectedIndex(0);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void notifyEvent(GameEvent<S, A> e) {
-		switch(e.getType()){
-		case Start:
-		case Change:
-			bRandom.setEnabled(e.getState().getTurn() == id);
-			bSmart.setEnabled(e.getState().getTurn() == id );
-			break;
-		case Stop:
-			bRandom.setEnabled(false);
-			bSmart.setEnabled(false);
-			break;
-		default:
-			break;
-		}
+	
+	public void enableButtons(boolean enab){
+		bRandom.setEnabled(enab);
+		bSmart.setEnabled(enab);
 	}
 }

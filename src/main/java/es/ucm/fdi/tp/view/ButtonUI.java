@@ -2,7 +2,9 @@ package es.ucm.fdi.tp.view;
 
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -12,8 +14,8 @@ public class ButtonUI extends JButton {
 	
 	public ButtonUI(){}
 
-	public ButtonUI(String image, String message, ActionListener listener) {
-		setIcon(new ImageIcon("src/main/resources/" + image + ".png"));
+	public ButtonUI(String image, String message, ActionListener listener) throws IOException, IllegalArgumentException{
+		setIcon(new ImageIcon(ImageIO.read(getClass().getResource('/' + image + ".png"))));
 		addActionListener(listener);
 		setToolTipText(message);
 		setPreferredSize(new Dimension(45, 45));

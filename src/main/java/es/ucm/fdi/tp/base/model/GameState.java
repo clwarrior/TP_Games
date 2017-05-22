@@ -33,6 +33,12 @@ public abstract class GameState<S extends GameState<S, A>, A extends GameAction<
 	public abstract int getTurn();
 
 	/**
+	 * @return the index of a player with valid actions
+	 */
+	public abstract boolean isValid(A action);
+	
+	
+	/**
 	 * @return the name of the game, by defualt the name of the class
 	 */
 	public String getGameDescription() {

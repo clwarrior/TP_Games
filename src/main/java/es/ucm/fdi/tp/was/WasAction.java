@@ -87,4 +87,40 @@ public class WasAction implements GameAction<WasState, WasAction> {
         return show;
     }
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((endPos == null) ? 0 : endPos.hashCode());
+		result = prime * result + ((iniPos == null) ? 0 : iniPos.hashCode());
+		result = prime * result + player;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WasAction other = (WasAction) obj;
+		if (endPos == null) {
+			if (other.endPos != null)
+				return false;
+		} else if (!endPos.equals(other.endPos))
+			return false;
+		if (iniPos == null) {
+			if (other.iniPos != null)
+				return false;
+		} else if (!iniPos.equals(other.iniPos))
+			return false;
+		if (player != other.player)
+			return false;
+		return true;
+	}
+    
+    
+
 }

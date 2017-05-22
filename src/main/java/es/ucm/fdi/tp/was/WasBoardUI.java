@@ -3,6 +3,7 @@ package es.ucm.fdi.tp.was;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.List;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.tp.view.BoardUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
@@ -39,7 +40,7 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 	 */
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
-		log.info("Player " + id + " clicked on cell " + new Coord(row, col));
+		Logger.getLogger("log").info("Player " + id + " clicked on cell " + new Coord(row, col));
 		Coord click = new Coord(row, col);
 		if (state.getTurn() == state.WOLF && id == state.getTurn() && !state.isFinished()) {
 			WasAction action = new WasAction(state.WOLF, click, state.getPieces()[state.WOLF]);

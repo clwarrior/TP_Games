@@ -15,14 +15,9 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
 
-import es.ucm.fdi.tp.base.model.GameAction;
-import es.ucm.fdi.tp.base.model.GameState;
-import es.ucm.fdi.tp.mvc.GameEvent;
-import es.ucm.fdi.tp.mvc.GameObserver;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 
-public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
-		extends JPanel implements GameObserver<S, A> {
+public class InfoPanel extends JPanel{
 
 	private static final long serialVersionUID = 5798952159009121986L;
 
@@ -31,21 +26,19 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	 * @author Claudia Guerrero García-Heras and Rafael Herrera Troca
 	 * @version 1 (03/05/2017)
 	 */
-	public interface RightPanelListener {
+	public interface InfoPanelListener {
 		public void changeColor();
 	}
 
-	private Logger log;
 	private int id;
 	private JTextArea text;
 	private ColorTableUI ct;
 	private ColorModel cm;
-	private RightPanelListener listener;
+	private InfoPanelListener listener;
 
-	public RightPanel(int numPlayers, ColorModel cm,
-			RightPanelListener listener, int id) {
+	public InfoPanel(int numPlayers, ColorModel cm,
+			InfoPanelListener listener, int id) {
 
-		this.log = Logger.getLogger("log");
 		this.id = id;
 		this.listener = listener;
 		this.cm = cm;
@@ -101,7 +94,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 				int col = colors.columnAtPoint(evt.getPoint());
 				if (row >= 0 && col >= 0) {
 					ct.changeColor(row);
-					log.info("Player " + id + " clicked in the color table");
+					Logger.getLogger("log").info("Player " + id + " clicked in the color table");
 					listener.changeColor();
 				}
 			}
@@ -123,7 +116,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	 * @param message
 	 */
 	public void addMessage(String message) {
-		log.info("Sent message: \"" + message + "\" to player " + id );
+		Logger.getLogger("log").info("Sent message: \"" + message + "\" to player " + id );
 		text.append(message + '\n');
 	}
 
@@ -131,34 +124,7 @@ public class RightPanel<S extends GameState<S, A>, A extends GameAction<S, A>>
 	 * Clears the status messages box
 	 */
 	public void clearMessages() {
-		log.info("Messages clear to player " + id);
+		Logger.getLogger("log").info("Messages clear to player " + id);
 		text.setText("");
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void notifyEvent(GameEvent<S, A> e) {
-		switch (e.getType()) {
-		case Start:
-			clearMessages();
-			addMessage("The game has started.");
-			break;
-		case Stop:
-				addMessage("The game has ended.");
-				int winner = e.getState().getWinner();
-				if (winner == id)
-					addMessage("Congratulations. You have won.");
-				else if(winner != -1)
-					addMessage("The winner is player "
-							+ e.getState().getWinner() + '.');
-				else
-					addMessage("It's a draw!");
-				break;
-		default:
-			break;
-		}
-		repaint();
 	}
 }

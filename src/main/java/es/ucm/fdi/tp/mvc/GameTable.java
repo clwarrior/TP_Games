@@ -76,11 +76,11 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
         		if(actualState.isFinished())
         			stop();
         	} catch (IllegalArgumentException e) {
-        		GameError error = new GameError("The game is stopped or not started");
+        		GameError error = new GameError("The game is stopped or not started", e);
             	GameEvent< S, A > event = 
         				new GameEvent< S, A >(EventType.Error, null, null, error, null);
             	notifyObservers(event);
-            	throw error;
+            	//throw error;
         	}
         }
     }

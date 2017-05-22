@@ -1,6 +1,8 @@
 package es.ucm.fdi.tp.ttt;
 
 import java.awt.Graphics;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.tp.view.BoardUI;
 import es.ucm.fdi.tp.view.ColorTableUI.ColorModel;
 /**
@@ -32,7 +34,7 @@ public class TttBoardUI extends BoardUI<TttState, TttAction> {
 	 */
 	@Override
 	protected void mouseClicked(int row, int col, int clickCount, int mouseButton) {
-		log.info("Player " + id + " clicked on cell (" + row + ',' + col + ")");
+		Logger.getLogger("log").info("Player " + id + " clicked on cell (" + row + ',' + col + ")");
 		if(state.getTurn() == id && !state.isFinished()) {
 			TttAction action = new TttAction(state.getTurn(), row, col);
 			if(state.isValid(action)) {
