@@ -3,6 +3,8 @@ package es.ucm.fdi.tp.extra.jboard;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -93,6 +95,8 @@ public abstract class JBoard extends JComponent {
 	}
 
 	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		super.paintComponent(g);
 		fillBoard(g);
 		paintSelected(g);
@@ -121,7 +125,7 @@ public abstract class JBoard extends JComponent {
 	private void drawCell(int row, int col, Graphics g) {
 		int x = col * _CELL_WIDTH;
 		int y = row * _CELL_HEIGHT;
-
+		
 		g.setColor( getBackground(row, col));
 		g.fillRect(x + _SEPARATOR, y + _SEPARATOR, _CELL_WIDTH - 2*_SEPARATOR, _CELL_HEIGHT - 2*_SEPARATOR);
 

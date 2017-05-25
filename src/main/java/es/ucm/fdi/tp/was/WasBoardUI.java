@@ -111,8 +111,8 @@ public class WasBoardUI extends BoardUI<WasState, WasAction> {
 			g.fillOval(selected.col * _CELL_WIDTH + _SEPARATOR + 2, selected.row * _CELL_HEIGHT + _SEPARATOR + 2,
 					_CELL_WIDTH - 2 * _SEPARATOR - 4, _CELL_HEIGHT - 2 * _SEPARATOR - 4);
 			g.setColor(cm.at(state.getTurn()));
-			g.fillOval(selected.col * _CELL_WIDTH + _SEPARATOR + 4, selected.row * _CELL_HEIGHT + _SEPARATOR + 4,
-					_CELL_WIDTH - 4 * _SEPARATOR - 4, _CELL_HEIGHT - 4 * _SEPARATOR - 4);
+			g.fillOval(selected.col * _CELL_WIDTH + _SEPARATOR + 6, selected.row * _CELL_HEIGHT + _SEPARATOR + 6,
+					_CELL_WIDTH - 6 * _SEPARATOR - 4, _CELL_HEIGHT - 6 * _SEPARATOR - 4);
 
 			List<WasAction> possible = state.validActions(state.getTurn(), selected);
 			g.setColor(cm.at(state.getTurn()));
