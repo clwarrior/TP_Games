@@ -13,6 +13,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
+/**
+ * Smart panel of the window. It contains the configurations to the smart movements and
+ * allows you change this configurations
+ * @author Claudia Guerrero García-Heras & Rafael Herrera Troca
+ * @version 3 (29/05/2017)
+ */
 public class SmartPanel extends JPanel{
 
 	private static final long serialVersionUID = 2396384271986958886L;
@@ -41,7 +47,10 @@ public class SmartPanel extends JPanel{
 		
 		initGUI();
 	}
-
+	
+	/**
+	 * It initializes the user's interface of the smartPanel
+	 */
 	private void initGUI() {
 		// ThreadsPanel
 		brain.setIcon(new ImageIcon("src/main/resources/brain.png"));
@@ -108,6 +117,9 @@ public class SmartPanel extends JPanel{
 		return time.getNumber().intValue();
 	}
 	
+	/**
+	 * It changes the brain's color and enables or disables the stop button when necessary
+	 */
 	public void thinking(){
 		if(brain.getBackground().equals(Color.BLACK)) {
 			brain.setBackground(Color.YELLOW);
