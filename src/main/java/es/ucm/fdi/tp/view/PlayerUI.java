@@ -218,9 +218,11 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 					iPanel.addMessage("It's your turn.");
 					autoMove();
 				}
+			case Error:
+				break;
 			default:
 				if(e.getState().getTurn() == id && !e.getState().isFinished())
-				autoMove();
+					autoMove();
 				break;
 			}
 			jf.repaint();

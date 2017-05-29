@@ -4,18 +4,17 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
-import es.ucm.fdi.tp.view.RightPanel.RightPanelListener;
+import es.ucm.fdi.tp.view.InfoPanel.InfoPanelListener;
 
-public class RightPanelTest {
+public class InfoPanelTest {
 
 	/**
-	 * Test checking whether the Right Panel is shown properly
+	 * Test checking whether the Info Panel is shown properly
 	 * @param args
 	 */
-	@SuppressWarnings("rawtypes")
 	public static void main(String ... args) {
 		
-		RightPanel<?, ?> rp = new RightPanel(3, new ColorTableUI().new ColorModel(3), new RightPanelListener(){
+		InfoPanel rp = new InfoPanel(3, new ColorTableUI().new ColorModel(3), new InfoPanelListener(){
 
 			public void changeColor() {
 				System.out.println("Clicked ColorTable");

@@ -80,7 +80,7 @@ public class GameTable<S extends GameState<S, A>, A extends GameAction<S, A>> im
             	GameEvent< S, A > event = 
         				new GameEvent< S, A >(EventType.Error, null, null, error, null);
             	notifyObservers(event);
-            	//throw error;
+            	throw error;
         	}
         }
     }
