@@ -70,24 +70,29 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		this.rPlayer = new RandomPlayer(name);
 		this.rPlayer.join(id);
 		this.sPlayer = new ConcurrentAiPlayer(name);
+		sPlayer.setTimeout(5000);
+		sPlayer.setMaxThreads(Runtime.getRuntime().availableProcessors());
 		this.smartMove = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				sPanel.thinking();
+				double inicio = System.currentTimeMillis();
 				A a = sPlayer.requestAction(game.getState());
-				sPanel.thinking();
-				board.nullSelected();
-				if (!game.isStopped() && a != null
-						&& !smartMove.isInterrupted()) {
-					SwingUtilities.invokeLater(() -> {
-						if (game.getState().isValid(a)) {
-							game.execute(a);
-							if (!game.getState().isFinished())
-								iPanel.addMessage("Turn of player " + (id + 1)
-										% 2);
-						}
-					});
-				}
+				final double tiempo = System.currentTimeMillis() - inicio;
+				SwingUtilities.invokeLater(() -> {
+					sPanel.thinking();
+					board.nullSelected();
+					if (!game.isStopped() && a != null
+							&& !smartMove.isInterrupted()
+							&& game.getState().isValid(a)) {
+						iPanel.addMessage(sPlayer.getEvaluationCount()
+								+ " nodes in " + tiempo + " ms ("
+								+ (int) (sPlayer.getEvaluationCount() / tiempo)
+								+ " n/ms) value = " + sPlayer.getValue());
+						game.execute(a);
+						if (!game.getState().isFinished())
+							iPanel.addMessage("Turn of player " + (id + 1) % 2);
+					}
+				});
 			}
 		});
 		;
