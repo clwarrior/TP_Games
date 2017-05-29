@@ -77,7 +77,8 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 				A a = sPlayer.requestAction(game.getState());
 				sPanel.thinking();
 				board.nullSelected();
-				if (!game.isStopped() && a != null && !smartMove.isInterrupted()) {
+				if (!game.isStopped() && a != null
+						&& !smartMove.isInterrupted()) {
 					SwingUtilities.invokeLater(() -> {
 						if (game.getState().isValid(a)) {
 							game.execute(a);
@@ -88,7 +89,8 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 					});
 				}
 			}
-		});;
+		});
+		;
 		this.sPlayer.join(id);
 		this.playerMode = PlayerMode.Manual;
 		this.jf = createJFrame(game, name, position);
@@ -156,7 +158,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			public void stopSearch() {
 				smartMove.interrupt();
 				iPanel.addMessage("You have stopped the smart movement.");
-				if(playerMode != PlayerMode.Manual){
+				if (playerMode != PlayerMode.Manual) {
 					playerMode = PlayerMode.Manual;
 					cPanel.changeManual();
 				}
@@ -189,7 +191,7 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 			case Start:
 				cPanel.enableButtons(e.getState().getTurn() == id);
 				board.setState(e.getState());
-				if(e.getState().getTurn() == id && !e.getState().isFinished()) {
+				if (e.getState().getTurn() == id && !e.getState().isFinished()) {
 					iPanel.addMessage("It's your turn.");
 					autoMove();
 				}
@@ -214,14 +216,14 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 				smartMove.interrupt();
 				cPanel.enableButtons(e.getState().getTurn() == id);
 				board.setState(e.getState());
-				if(e.getState().getTurn() == id && !e.getState().isFinished()) {
+				if (e.getState().getTurn() == id && !e.getState().isFinished()) {
 					iPanel.addMessage("It's your turn.");
 					autoMove();
 				}
 			case Error:
 				break;
 			default:
-				if(e.getState().getTurn() == id && !e.getState().isFinished())
+				if (e.getState().getTurn() == id && !e.getState().isFinished())
 					autoMove();
 				break;
 			}
@@ -289,18 +291,22 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 		smartMove = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				double inicio = System.currentTimeMillis();
 				A a = sPlayer.requestAction(game.getState());
+				final double tiempo = System.currentTimeMillis() - inicio;
 				SwingUtilities.invokeLater(() -> {
 					sPanel.thinking();
 					board.nullSelected();
 					if (!game.isStopped() && a != null
-							&& !smartMove.isInterrupted()) {
-						if (game.getState().isValid(a)) {
-							game.execute(a);
-							if (!game.getState().isFinished())
-								iPanel.addMessage("Turn of player " + (id + 1)
-										% 2);
-						}
+							&& !smartMove.isInterrupted()
+							&& game.getState().isValid(a)) {
+						iPanel.addMessage(sPlayer.getEvaluationCount()
+								+ " nodes in " + tiempo + " ms ("
+								+ (int) (sPlayer.getEvaluationCount() / tiempo)
+								+ " n/ms) value = " + sPlayer.getValue());
+						game.execute(a);
+						if (!game.getState().isFinished())
+							iPanel.addMessage("Turn of player " + (id + 1) % 2);
 					}
 				});
 			}
