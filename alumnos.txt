@@ -1,3 +1,14 @@
 Grupo 2:
- - Claudia Guerrero Garc�a-Heras
+ - Claudia Guerrero Garc�a-Heras
  - Rafael Herrera Troca
+ 
+ Corregidas los errores de la práctica 5:
+ 	- Nombres de los paneles
+ 	- Sacar imágenes con getResource() en lugar de la ruta
+ 	- Quitar GameObserver de los paneles para que los componentes no dependan tanto
+ 	 de su contexto de uso
+ 	- Logs de forma estática en lugar de como atributo
+ 	 
+ Añadido:
+ 	- Graphics 2D para mejor resolución del tablero
+ 	

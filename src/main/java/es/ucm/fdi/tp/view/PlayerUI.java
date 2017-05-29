@@ -285,23 +285,24 @@ public abstract class PlayerUI<S extends GameState<S, A>, A extends GameAction<S
 	 * Method that makes a smart move
 	 */
 	public void smartMove() {
+		sPanel.thinking();
 		smartMove = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				sPanel.thinking();
 				A a = sPlayer.requestAction(game.getState());
-				sPanel.thinking();
-				board.nullSelected();
-				if (!game.isStopped() && a != null && !smartMove.isInterrupted()) {
-					SwingUtilities.invokeLater(() -> {
+				SwingUtilities.invokeLater(() -> {
+					sPanel.thinking();
+					board.nullSelected();
+					if (!game.isStopped() && a != null
+							&& !smartMove.isInterrupted()) {
 						if (game.getState().isValid(a)) {
 							game.execute(a);
 							if (!game.getState().isFinished())
 								iPanel.addMessage("Turn of player " + (id + 1)
 										% 2);
 						}
-					});
-				}
+					}
+				});
 			}
 		});
 		smartMove.start();
