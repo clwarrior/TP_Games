@@ -32,7 +32,9 @@ public class SmartPanel extends JPanel{
 	private int id;
 	private JLabel brain;
 	private SpinnerNumberModel numThreads;
+	private JSpinner numThreadsSpin;
 	private SpinnerNumberModel time;
+	private JSpinner timeSpin;
 	private ButtonUI stop;
 	private SmartPanelListener listener;
 
@@ -57,7 +59,7 @@ public class SmartPanel extends JPanel{
 		brain.setOpaque(true);
 		brain.setBackground(Color.BLACK);
 		
-		JSpinner numThreadsSpin = new JSpinner(numThreads);
+		numThreadsSpin = new JSpinner(numThreads);
 		numThreadsSpin.setToolTipText("Number of threads available to the SmartPlayer algorithm.");
 		numThreadsSpin.addChangeListener((e) -> {
 			Logger.getLogger("log").info("Player " + id + " changed threads to " + getThreads() + "ms");
@@ -75,7 +77,7 @@ public class SmartPanel extends JPanel{
 		JLabel clock = new JLabel();
 		clock.setIcon(new ImageIcon("src/main/resources/timer.png"));
 		
-		JSpinner timeSpin = new JSpinner(time);
+		timeSpin = new JSpinner(time);
 		timeSpin.setToolTipText("Maximum time to make the smart movement.");
 		timeSpin.addChangeListener((e) -> {
 			Logger.getLogger("log").info("Player " + id + " changed time to " + getTime() + "ms");
@@ -123,9 +125,13 @@ public class SmartPanel extends JPanel{
 	public void thinking(){
 		if(brain.getBackground().equals(Color.BLACK)) {
 			brain.setBackground(Color.YELLOW);
+			numThreadsSpin.setEnabled(false);
+			timeSpin.setEnabled(false);
 			stop.setEnabled(true);
 		} else {
 			brain.setBackground(Color.BLACK);
+			numThreadsSpin.setEnabled(true);
+			timeSpin.setEnabled(true);
 			stop.setEnabled(false);
 		}
 		repaint();
